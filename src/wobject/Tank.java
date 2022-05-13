@@ -6,6 +6,10 @@ public class Tank extends WObject implements Movable{
         super(x, y, lifePoint);
     }
 
+    public void fire() {
+        // TODO: implement bullet fire method here
+    }
+
     @Override
     public void turnNorth() {
         dx = 0;

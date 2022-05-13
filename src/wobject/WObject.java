@@ -1,6 +1,9 @@
 package wobject;
 
 public abstract class WObject {
+    /**
+     * Base world object
+     */
     // movement attributes
     protected int x;
     protected int y;
