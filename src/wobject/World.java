@@ -18,12 +18,18 @@ public class World {
             add(new Steel(1, 1));
             add(new Trees(2, 2));
         }};
-        // TODO: Add tanks
-        tanks = new ArrayList<>();
+        tanks = new ArrayList<>(){{
+            add(new Tank(5, 5, 1));
+            add(new Tank(5, 5, 2));
+        }};
 
     }
 
     public List<WObject> getTiles() {
         return tiles;
+    }
+
+    public List<Tank> getTanks() {
+        return tanks;
     }
 }
