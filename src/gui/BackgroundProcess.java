@@ -21,4 +21,12 @@ public class BackgroundProcess {
         window.revalidate();
         window.repaint();
     }
+
+    public void startOnePlayerGame() {
+
+    }
+
+    public void startTwoPlayerGame() {
+
+    }
 }
