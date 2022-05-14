@@ -53,6 +53,9 @@ public class BattleField extends JPanel implements Observer<String> {
         if (message.equals("RIGHT")) {
             world.moveTankEast();
         }
+        if (message.equals("RELEASE")) {
+            world.stopTank();
+        }
         repaint();
     }
 
@@ -75,7 +78,7 @@ public class BattleField extends JPanel implements Observer<String> {
 
         @Override
         public void keyReleased(KeyEvent e) {
-            // TODO: set up tank stopping.
+            notifyObservers("RELEASE");
         }
 
         @Override
@@ -95,8 +98,9 @@ public class BattleField extends JPanel implements Observer<String> {
     public void paint(Graphics g) {
         super.paint(g);
         paintGrid(g);
-        paintTiles(g);
         paintTanks(g);
+        // So tiles can overwrite tanks
+        paintTiles(g);
     }
 
     public void paintGrid(Graphics g) {
