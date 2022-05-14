@@ -2,9 +2,12 @@ package gui;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class OptionMenu extends JPanel{
 
+    private BackgroundProcess backgroundProcess;
     private JTextField oneUp;
     private JTextField oneDown;
     private JTextField oneLeft;
@@ -14,8 +17,11 @@ public class OptionMenu extends JPanel{
     private JTextField twoLeft;
     private JTextField twoRight;
     private JButton saveButton;
+    private JButton backButton;
 
-    OptionMenu() {
+    OptionMenu(BackgroundProcess backgroundProcess) {
+        this.backgroundProcess = backgroundProcess;
+
         initMenu();
 
         setLayout(new GridLayout(0, 4));
@@ -36,6 +42,7 @@ public class OptionMenu extends JPanel{
         add(new JLabel("Player 2 RIGHT:"));
         add(twoRight);
         add(saveButton);
+        add(backButton);
     }
 
     private void initMenu() {
@@ -51,5 +58,13 @@ public class OptionMenu extends JPanel{
         twoRight = new JTextField();
         // save button
         saveButton = new JButton("save");
+        // TODO: add action listener for save button
+        backButton = new JButton("return to menu");
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                backgroundProcess.changeToGameMenu();
+            }
+        });
     }
 }

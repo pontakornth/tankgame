@@ -2,14 +2,19 @@ package gui;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class GameMenu extends JPanel {
 
+    private BackgroundProcess backgroundProcess;
     private JButton onePlayerButton;
     private JButton twoPlayerButton;
     private JButton optionButton;
 
-    GameMenu() {
+    GameMenu(BackgroundProcess backgroundProcess) {
+        this.backgroundProcess = backgroundProcess;
+
         initMenu();
         setLayout(new GridLayout(0, 1));
         add(new JLabel("TANK GAME"));
@@ -24,5 +29,11 @@ public class GameMenu extends JPanel {
         optionButton = new JButton("Options");
 
         // TODO: add event listeners and changing panel methods
+        optionButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                backgroundProcess.changeToOptionMenu();
+            }
+        });
     }
 }
