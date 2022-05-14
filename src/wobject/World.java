@@ -97,4 +97,10 @@ public class World implements Observable<String> {
     public void notifyObservers(String message) {
         observer.onNotify(message);
     }
+
+    public void stopTank() {
+        Tank tank = tanks.get(0);
+        if (tank != null)
+            tank.setStop();
+    }
 }
