@@ -63,7 +63,7 @@ public class Tank extends WObject implements Movable{
     @Override
     public String getSpriteFileName() {
         // TODO: Change name based on type.
-        return directionImageFileName.get(direction);
+        return directionImageFileName.getOrDefault(direction, "./img/blue-tank-front.png");
     }
     // TODO: Add functionality to tank.
 }
