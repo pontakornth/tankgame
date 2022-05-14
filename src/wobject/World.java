@@ -23,7 +23,7 @@ public class World implements Observable<String> {
             add(new Trees(2, 2));
         }};
         tanks = new ArrayList<>(){{
-            add(new Tank(5, 5, 1));
+            add(new Tank(5, 20, 1));
             add(new Tank(5, 5, 2));
         }};
 
@@ -60,13 +60,33 @@ public class World implements Observable<String> {
     }
 
     public void moveTankNorth() {
+        // TODO: Handle multiple tanks
         Tank tank = tanks.get(0);
         if (tank != null) {
             tank.turnNorth();
-            tank.update();
         }
     }
 
+    public void moveTankWest() {
+        Tank tank = tanks.get(0);
+        if (tank != null) {
+            tank.turnWest();
+        }
+    }
+
+    public void moveTankEast() {
+        Tank tank = tanks.get(0);
+        if (tank != null) {
+            tank.turnEast();
+        }
+    }
+
+    public void moveTankSouth() {
+        Tank tank = tanks.get(0);
+        if (tank != null) {
+            tank.turnSouth();
+        }
+    }
     @Override
     public void addObservers(Observer<String> observer) {
         if (this.observer == null)
