@@ -9,4 +9,9 @@ public class Steel extends WObject {
     public void update() {
 
     }
+
+    @Override
+    public String getSpriteFileName() {
+        return "./img/metal.png";
+    }
 }

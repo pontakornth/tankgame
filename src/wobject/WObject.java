@@ -12,6 +12,7 @@ public abstract class WObject {
     // other attributes
     protected int lifePoint;
 
+
     WObject(int x, int y) {
         this.x = x;
         this.y = y;
@@ -26,7 +27,7 @@ public abstract class WObject {
 
     public boolean hit(WObject wObject) {
       return  x == wObject.x && y == wObject.y;
-    };
+    }
 
     public int getX() {
         return x;
@@ -42,4 +43,6 @@ public abstract class WObject {
 
     // update to next stage
     public abstract void update();
+
+    public abstract String getSpriteFileName();
 }

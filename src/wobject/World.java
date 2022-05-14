@@ -1,5 +1,6 @@
 package wobject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class World {
@@ -10,7 +11,19 @@ public class World {
 
     private List<Tank> tanks;
 
-    World() {
+    public World() {
+        // TODO: Load map from files instead.
+        tiles = new ArrayList<>() {{
+            add(new Brick(0, 0));
+            add(new Steel(1, 1));
+            add(new Trees(2, 2));
+        }};
+        // TODO: Add tanks
+        tanks = new ArrayList<>();
 
+    }
+
+    public List<WObject> getTiles() {
+        return tiles;
     }
 }

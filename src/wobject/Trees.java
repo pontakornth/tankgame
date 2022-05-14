@@ -9,4 +9,9 @@ public class Trees extends WObject {
     public void update() {
 
     }
+
+    @Override
+    public String getSpriteFileName() {
+        return "./img/tree.png";
+    }
 }
