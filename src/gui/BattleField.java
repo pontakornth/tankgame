@@ -1,14 +1,19 @@
 package gui;
 
+import util.Observable;
+import util.Observer;
 import wobject.WObject;
 import wobject.World;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BattleField extends JPanel {
+public class BattleField extends JPanel implements Observer<String> {
 
     // TODO: add world object and update its graphic
     private World world;
@@ -20,8 +25,57 @@ public class BattleField extends JPanel {
 
     BattleField() {
         world = new World();
+        world.addObservers(this);
         imageMap = new HashMap<>();
+        setFocusable(true);
+        requestFocusInWindow();
         setPreferredSize(new Dimension(SIZE*GRID_PIXEL, SIZE*GRID_PIXEL));
+        MovementListener movementListener = new MovementListener();
+        movementListener.addObservers(this);
+        addKeyListener(movementListener);
+    }
+
+    @Override
+    public void onNotify(String message) {
+        // Handle Tank Movement
+        if (message.equals("UP")) {
+            world.moveTankNorth();
+        }
+        repaint();
+    }
+
+    private class MovementListener extends KeyAdapter implements Observable<String> {
+        private Observer<String> observer;
+        @Override
+        public void keyPressed(KeyEvent e) {
+            int keyCode = e.getKeyCode();
+            // TODO: Handle second tank and stopping.
+            if (keyCode == KeyEvent.VK_UP) {
+                notifyObservers("UP");
+            } else if (keyCode == KeyEvent.VK_DOWN) {
+                notifyObservers("DOWN");
+            } else if (keyCode == KeyEvent.VK_LEFT) {
+                notifyObservers("LEFT");
+            } else if (keyCode == KeyEvent.VK_RIGHT) {
+                notifyObservers("RIGHT");
+            }
+        }
+
+        @Override
+        public void keyReleased(KeyEvent e) {
+            // TODO: set up tank stopping.
+        }
+
+        @Override
+        public void addObservers(Observer<String> observer) {
+            if (this.observer == null)
+                this.observer = observer;
+        }
+
+        @Override
+        public void notifyObservers(String message) {
+            observer.onNotify(message);
+        }
     }
 
     // paint methods

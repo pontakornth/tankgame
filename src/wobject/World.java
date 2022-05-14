@@ -1,15 +1,19 @@
 package wobject;
 
+import util.Observable;
+import util.Observer;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class World {
+public class World implements Observable<String> {
 
     // TODO: implement game logic here!
     // tiles are for fixed tiles such as bricks, steel, or trees
     private List<WObject> tiles;
 
     private List<Tank> tanks;
+    private Observer<String> observer;
 
     public World() {
         // TODO: Load map from files instead.
@@ -25,11 +29,52 @@ public class World {
 
     }
 
+    public void init() {
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                while (true) {
+                    for (Tank tank: tanks) {
+                        tank.update();
+                    }
+                    notifyObservers("UPDATE");
+                    try {
+                        Thread.sleep(100 * 3);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+
+                }
+            }
+        };
+        thread.start();
+    }
+
     public List<WObject> getTiles() {
         return tiles;
     }
 
     public List<Tank> getTanks() {
         return tanks;
+    }
+
+    public void moveTankNorth() {
+        Tank tank = tanks.get(0);
+        if (tank != null) {
+            tank.turnNorth();
+            tank.update();
+        }
+    }
+
+    @Override
+    public void addObservers(Observer<String> observer) {
+        if (this.observer == null)
+            this.observer = observer;
+    }
+
+    @Override
+    public void notifyObservers(String message) {
+        observer.onNotify(message);
     }
 }
