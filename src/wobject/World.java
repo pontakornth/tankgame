@@ -71,34 +71,6 @@ public class World implements Observable<String> {
         return tanks;
     }
 
-    public void moveTankNorth() {
-        // TODO: Handle multiple tanks
-        Tank tank = tanks.get(0);
-        if (tank != null) {
-            tank.turnNorth();
-        }
-    }
-
-    public void moveTankWest() {
-        Tank tank = tanks.get(0);
-        if (tank != null) {
-            tank.turnWest();
-        }
-    }
-
-    public void moveTankEast() {
-        Tank tank = tanks.get(0);
-        if (tank != null) {
-            tank.turnEast();
-        }
-    }
-
-    public void moveTankSouth() {
-        Tank tank = tanks.get(0);
-        if (tank != null) {
-            tank.turnSouth();
-        }
-    }
     @Override
     public void addObservers(Observer<String> observer) {
         if (this.observer == null)
