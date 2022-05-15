@@ -7,6 +7,7 @@ public class Window extends JFrame {
      * Main game window contain all game components
      */
 
+    // game components
     private BattleField battleField;
 
     // menu components
@@ -22,12 +23,7 @@ public class Window extends JFrame {
         add(gameMenu);
         pack();
 
-//        battleField = new BattleField();
-//        add(battleField);
-//        pack();
-
         setTitle("Tank Game");
-
         setAlwaysOnTop(true);
         setResizable(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -38,6 +34,7 @@ public class Window extends JFrame {
         backgroundProcess = new BackgroundProcess(this);
         gameMenu = new GameMenu(backgroundProcess);
         optionMenu = new OptionMenu(backgroundProcess);
+        battleField = new BattleField(backgroundProcess);
     }
 
     public BattleField getBattleField() {
@@ -50,6 +47,10 @@ public class Window extends JFrame {
 
     public OptionMenu getOptionMenu() {
         return optionMenu;
+    }
+
+    public void setBattleField(BattleField battleField) {
+        this.battleField = battleField;
     }
 
     public static void main(String[] args) {

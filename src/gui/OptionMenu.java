@@ -62,6 +62,9 @@ public class OptionMenu extends JPanel{
         add(twoFire);
         add(saveButton);
         add(backButton);
+
+        // TODO: config dynamic panel size
+        setPreferredSize(new Dimension(690, 690));
     }
 
     public void updateKeyProp() {

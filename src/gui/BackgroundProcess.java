@@ -28,6 +28,12 @@ public class BackgroundProcess {
     }
 
     public void startTwoPlayerGame() {
-        // TODO: add background process for start two players game
+        // TODO: fix bug MovementListener disappear
+        window.getContentPane().removeAll();
+        window.setBattleField(new BattleField(this));
+        window.getContentPane().add(window.getBattleField());
+        window.getBattleField().requestFocus(); // in order to access the listener component need focus
+        window.revalidate();
+        window.repaint();
     }
 }

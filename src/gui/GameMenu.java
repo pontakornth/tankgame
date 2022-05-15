@@ -21,6 +21,9 @@ public class GameMenu extends JPanel {
         add(onePlayerButton);
         add(twoPlayerButton);
         add(optionButton);
+
+        // TODO: config dynamic panel size
+        setPreferredSize(new Dimension(690, 690));
     }
 
     private void initMenu() {
@@ -28,11 +31,25 @@ public class GameMenu extends JPanel {
         twoPlayerButton = new JButton("2 Players");
         optionButton = new JButton("Options");
 
-        // TODO: add event listeners and changing panel methods
         optionButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 backgroundProcess.changeToOptionMenu();
+            }
+        });
+
+        onePlayerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO: add event listener here
+            }
+        });
+
+        twoPlayerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO: add event listen here, now it's a template
+                backgroundProcess.startTwoPlayerGame();
             }
         });
     }

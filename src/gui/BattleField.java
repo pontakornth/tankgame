@@ -24,12 +24,15 @@ public class BattleField extends JPanel implements Observer<String> {
     private int SIZE = 23;
     private int GRID_PIXEL = 30;
 
-    BattleField() {
+    private BackgroundProcess backgroundProcess;
+
+    BattleField(BackgroundProcess backgroundProcess) {
+        this.backgroundProcess = backgroundProcess;
+
         world = new World();
         world.addObservers(this);
         imageMap = new HashMap<>();
         setFocusable(true);
-        requestFocusInWindow();
         setPreferredSize(new Dimension(SIZE*GRID_PIXEL, SIZE*GRID_PIXEL));
         MovementListener movementListener = new MovementListener(this);
         movementListener.addObservers(this);

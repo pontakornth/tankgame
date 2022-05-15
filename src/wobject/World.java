@@ -44,8 +44,6 @@ public class World implements Observable<String> {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-
             }
         });
         thread.start();
