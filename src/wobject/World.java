@@ -121,4 +121,10 @@ public class World implements Observable<String> {
             }
         }
     }
+
+    public void stopTank(int tankIndex) {
+        Tank tank = tanks.get(tankIndex);
+        if (tank != null)
+            tank.setStop();
+    }
 }

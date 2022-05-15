@@ -80,11 +80,33 @@ public class BattleField extends JPanel implements Observer<String> {
             } else if (keyCode == KeyEvent.VK_RIGHT) {
                 battleField.moveTank(0, Direction.East);
             }
+
+            if (keyCode == KeyEvent.VK_W) {
+                battleField.moveTank(1, Direction.North);
+            } else if (keyCode == KeyEvent.VK_S) {
+                battleField.moveTank(1, Direction.South);
+            } else if (keyCode == KeyEvent.VK_A) {
+                battleField.moveTank(1, Direction.West);
+            } else if (keyCode == KeyEvent.VK_D) {
+                battleField.moveTank(1, Direction.East);
+            }
         }
 
         @Override
         public void keyReleased(KeyEvent e) {
-            notifyObservers("RELEASE");
+            // TODO: Receive array of keys from config instead
+            int[] player1 = new int[]{KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT};
+            int[] player2 = new int[]{KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D};
+            for (int key: player1) {
+                if (key == e.getKeyCode()) {
+                    battleField.stopTank(0);
+                }
+            }
+            for (int key: player2) {
+                if (key == e.getKeyCode()) {
+                    battleField.stopTank(1);
+                }
+            }
         }
 
         @Override
@@ -97,6 +119,10 @@ public class BattleField extends JPanel implements Observer<String> {
         public void notifyObservers(String message) {
             observer.onNotify(message);
         }
+    }
+
+    private void stopTank(int tankIndex) {
+        world.stopTank(tankIndex);
     }
 
     private void moveTank(int tankIndex, Direction direction) {
