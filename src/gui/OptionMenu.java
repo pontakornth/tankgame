@@ -73,15 +73,21 @@ public class OptionMenu extends JPanel{
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        System.out.println(prop.getProperty("ONE_UP"));
     }
 
     public void updateKeyProp() {
+        // player one
         oneUp.setText(KeyEvent.getKeyText(Integer.parseInt(prop.getProperty("ONE_UP"))));
         oneDown.setText(KeyEvent.getKeyText(Integer.parseInt(prop.getProperty("ONE_DOWN"))));
         oneLeft.setText(KeyEvent.getKeyText(Integer.parseInt(prop.getProperty("ONE_LEFT"))));
         oneRight.setText(KeyEvent.getKeyText(Integer.parseInt(prop.getProperty("ONE_RIGHT"))));
         oneFire.setText(KeyEvent.getKeyText(Integer.parseInt(prop.getProperty("ONE_FIRE"))));
+        // player two
+        twoUp.setText(KeyEvent.getKeyText(Integer.parseInt(prop.getProperty("TWO_UP"))));
+        twoDown.setText(KeyEvent.getKeyText(Integer.parseInt(prop.getProperty("TWO_DOWN"))));
+        twoLeft.setText(KeyEvent.getKeyText(Integer.parseInt(prop.getProperty("TWO_LEFT"))));
+        twoRight.setText(KeyEvent.getKeyText(Integer.parseInt(prop.getProperty("TWO_RIGHT"))));
+        twoFire.setText(KeyEvent.getKeyText(Integer.parseInt(prop.getProperty("TWO_FIRE"))));
     }
 
     private void initMenu() {
@@ -94,18 +100,18 @@ public class OptionMenu extends JPanel{
         oneRight = new KeyTextField();
         oneFire = new KeyTextField();
         // player 2 setting
-        twoUp = new KeyTextField("ARROW-UP");
-        twoDown = new KeyTextField("ARROW-DOWN");
-        twoLeft = new KeyTextField("ARROW-LEFT");
-        twoRight = new KeyTextField("ARROW-RIGHT");
-        twoFire = new KeyTextField("ENTER");
+        twoUp = new KeyTextField();
+        twoDown = new KeyTextField();
+        twoLeft = new KeyTextField();
+        twoRight = new KeyTextField();
+        twoFire = new KeyTextField();
         // save button
         saveButton = new JButton("save");
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO: add action listener for save button
-
+                System.out.println(KeyEvent.VK_P);
             }
         });
         // back button
