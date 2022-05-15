@@ -17,6 +17,7 @@ public class BackgroundProcess {
 
     public void changeToGameMenu() {
         window.getContentPane().removeAll();
+        window.getOptionMenu().updateKeyProp();
         window.getContentPane().add(window.getGameMenu());
         window.revalidate();
         window.repaint();

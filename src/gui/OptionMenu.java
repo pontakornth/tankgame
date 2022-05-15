@@ -99,7 +99,22 @@ public class OptionMenu extends JPanel{
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO: add action listener for save button
-
+                MovementConfig key = MovementConfig.getInstance();
+                // player one
+                key.updateProp("ONE_UP", KeyEvent.getExtendedKeyCodeForChar(oneUp.getText().charAt(0)));
+                key.updateProp("ONE_DOWN", KeyEvent.getExtendedKeyCodeForChar(oneDown.getText().charAt(0)));
+                key.updateProp("ONE_LEFT", KeyEvent.getExtendedKeyCodeForChar(oneLeft.getText().charAt(0)));
+                key.updateProp("ONE_RIGHT", KeyEvent.getExtendedKeyCodeForChar(oneRight.getText().charAt(0)));
+                key.updateProp("ONE_FIRE", KeyEvent.getExtendedKeyCodeForChar(oneFire.getText().charAt(0)));
+                // player two
+                key.updateProp("TWO_UP", KeyEvent.getExtendedKeyCodeForChar(twoUp.getText().charAt(0)));
+                key.updateProp("TWO_DOWN", KeyEvent.getExtendedKeyCodeForChar(twoDown.getText().charAt(0)));
+                key.updateProp("TWO_LEFT", KeyEvent.getExtendedKeyCodeForChar(twoLeft.getText().charAt(0)));
+                key.updateProp("TWO_RIGHT", KeyEvent.getExtendedKeyCodeForChar(twoRight.getText().charAt(0)));
+                key.updateProp("TWO_FIRE", KeyEvent.getExtendedKeyCodeForChar(twoFire.getText().charAt(0)));
+                System.out.println(twoFire.getText());
+                // save properties
+                key.saveProp();
             }
         });
         // back button

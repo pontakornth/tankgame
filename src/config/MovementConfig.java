@@ -2,8 +2,8 @@ package config;
 
 import java.awt.event.KeyEvent;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Properties;
 
 public class MovementConfig {
@@ -39,7 +39,16 @@ public class MovementConfig {
         }
     }
 
-    public void updateProp() {
+    public void updateProp(String propName, int keyCode) {
+        prop.setProperty(propName, String.valueOf(keyCode));
+    }
 
+    public void saveProp() {
+        // TODO: change to real one
+        try {
+            prop.store(new FileOutputStream(CONFIG_FILE), null);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
