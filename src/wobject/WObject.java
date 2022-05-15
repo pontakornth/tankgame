@@ -45,4 +45,12 @@ public abstract class WObject {
     public abstract void update();
 
     public abstract String getSpriteFileName();
+
+    /**
+     * If solid that's mean it is passable.
+     * @return The WObject is solid or not.
+     */
+    public boolean isSolid() {
+        return true;
+    }
 }

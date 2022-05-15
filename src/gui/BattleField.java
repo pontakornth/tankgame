@@ -2,6 +2,7 @@ package gui;
 
 import util.Observable;
 import util.Observer;
+import wobject.Direction;
 import wobject.WObject;
 import wobject.World;
 
@@ -30,7 +31,7 @@ public class BattleField extends JPanel implements Observer<String> {
         setFocusable(true);
         requestFocusInWindow();
         setPreferredSize(new Dimension(SIZE*GRID_PIXEL, SIZE*GRID_PIXEL));
-        MovementListener movementListener = new MovementListener();
+        MovementListener movementListener = new MovementListener(this);
         movementListener.addObservers(this);
         addKeyListener(movementListener);
         world.init();
@@ -38,47 +39,57 @@ public class BattleField extends JPanel implements Observer<String> {
 
     @Override
     public void onNotify(String message) {
-        // Handle Tank Movement
-        // TODO: Handle multiple tanks
-        if (message.equals("UP")) {
-            world.moveTankNorth();
-        }
-        if (message.equals("DOWN")) {
-            world.moveTankSouth();
-        }
-
-        if (message.equals("LEFT")) {
-            world.moveTankWest();
-        }
-        if (message.equals("RIGHT")) {
-            world.moveTankEast();
-        }
-        if (message.equals("RELEASE")) {
-            world.stopTank();
-        }
+        // TODO: Handle update from world such as losing.
         repaint();
     }
 
     private class MovementListener extends KeyAdapter implements Observable<String> {
         private Observer<String> observer;
+        private BattleField battleField;
+
+        public MovementListener(BattleField battleField) {
+            this.battleField = battleField;
+        }
         @Override
         public void keyPressed(KeyEvent e) {
             int keyCode = e.getKeyCode();
             // TODO: Handle second tank and stopping.
             if (keyCode == KeyEvent.VK_UP) {
-                notifyObservers("UP");
+                battleField.moveTank(0, Direction.North);
             } else if (keyCode == KeyEvent.VK_DOWN) {
-                notifyObservers("DOWN");
+                battleField.moveTank(0, Direction.South);
             } else if (keyCode == KeyEvent.VK_LEFT) {
-                notifyObservers("LEFT");
+                battleField.moveTank(0, Direction.West);
             } else if (keyCode == KeyEvent.VK_RIGHT) {
-                notifyObservers("RIGHT");
+                battleField.moveTank(0, Direction.East);
+            }
+
+            if (keyCode == KeyEvent.VK_W) {
+                battleField.moveTank(1, Direction.North);
+            } else if (keyCode == KeyEvent.VK_S) {
+                battleField.moveTank(1, Direction.South);
+            } else if (keyCode == KeyEvent.VK_A) {
+                battleField.moveTank(1, Direction.West);
+            } else if (keyCode == KeyEvent.VK_D) {
+                battleField.moveTank(1, Direction.East);
             }
         }
 
         @Override
         public void keyReleased(KeyEvent e) {
-            notifyObservers("RELEASE");
+            // TODO: Receive array of keys from config instead
+            int[] player1 = new int[]{KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT};
+            int[] player2 = new int[]{KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D};
+            for (int key: player1) {
+                if (key == e.getKeyCode()) {
+                    battleField.stopTank(0);
+                }
+            }
+            for (int key: player2) {
+                if (key == e.getKeyCode()) {
+                    battleField.stopTank(1);
+                }
+            }
         }
 
         @Override
@@ -91,6 +102,14 @@ public class BattleField extends JPanel implements Observer<String> {
         public void notifyObservers(String message) {
             observer.onNotify(message);
         }
+    }
+
+    private void stopTank(int tankIndex) {
+        world.stopTank(tankIndex);
+    }
+
+    private void moveTank(int tankIndex, Direction direction) {
+        world.moveTank(tankIndex, direction);
     }
 
     // paint methods

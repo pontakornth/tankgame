@@ -65,5 +65,13 @@ public class Tank extends WObject implements Movable{
         // TODO: Change name based on type.
         return directionImageFileName.getOrDefault(direction, "./img/blue-tank-front.png");
     }
+
+    public int getDx() {
+        return dx;
+    }
+
+    public int getDy() {
+        return dy;
+    }
     // TODO: Add functionality to tank.
 }
