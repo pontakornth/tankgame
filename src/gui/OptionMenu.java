@@ -1,26 +1,39 @@
 package gui;
 
 import javax.swing.*;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.security.Key;
+import java.util.Properties;
 
 public class OptionMenu extends JPanel{
 
     private BackgroundProcess backgroundProcess;
-    private UneditableTextField oneUp;
-    private UneditableTextField oneDown;
-    private UneditableTextField oneLeft;
-    private UneditableTextField oneRight;
-    private UneditableTextField oneFire;
-    private UneditableTextField twoUp;
-    private UneditableTextField twoDown;
-    private UneditableTextField twoLeft;
-    private UneditableTextField twoRight;
-    private UneditableTextField twoFire;
+    private KeyTextField oneUp;
+    private KeyTextField oneDown;
+    private KeyTextField oneLeft;
+    private KeyTextField oneRight;
+    private KeyTextField oneFire;
+    private KeyTextField twoUp;
+    private KeyTextField twoDown;
+    private KeyTextField twoLeft;
+    private KeyTextField twoRight;
+    private KeyTextField twoFire;
     private JButton saveButton;
     private JButton backButton;
+
+    // Player Control Properties
+    Properties prop;
 
     OptionMenu(BackgroundProcess backgroundProcess) {
         this.backgroundProcess = backgroundProcess;
@@ -52,23 +65,49 @@ public class OptionMenu extends JPanel{
         add(backButton);
     }
 
+    public void readKeyProp() {
+        String CONFIG_FILE = "config/game-control.properties";
+        prop = new Properties();
+        try {
+            prop.load(new FileInputStream(CONFIG_FILE));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println(prop.getProperty("ONE_UP"));
+    }
+
+    public void updateKeyProp() {
+        oneUp.setText(KeyEvent.getKeyText(Integer.parseInt(prop.getProperty("ONE_UP"))));
+        oneDown.setText(KeyEvent.getKeyText(Integer.parseInt(prop.getProperty("ONE_DOWN"))));
+        oneLeft.setText(KeyEvent.getKeyText(Integer.parseInt(prop.getProperty("ONE_LEFT"))));
+        oneRight.setText(KeyEvent.getKeyText(Integer.parseInt(prop.getProperty("ONE_RIGHT"))));
+        oneFire.setText(KeyEvent.getKeyText(Integer.parseInt(prop.getProperty("ONE_FIRE"))));
+    }
+
     private void initMenu() {
+        // read properties file
+        readKeyProp();
         // player 1 setting
-        oneUp = new UneditableTextField("W");
-        oneDown = new UneditableTextField("S");
-        oneLeft = new UneditableTextField("A");
-        oneRight = new UneditableTextField("D");
-        oneFire = new UneditableTextField("SPACE");
+        oneUp = new KeyTextField();
+        oneDown = new KeyTextField();
+        oneLeft = new KeyTextField();
+        oneRight = new KeyTextField();
+        oneFire = new KeyTextField();
         // player 2 setting
-        twoUp = new UneditableTextField("ARROW-UP");
-        twoDown = new UneditableTextField("ARROW-DOWN");
-        twoLeft = new UneditableTextField("ARROW-LEFT");
-        twoRight = new UneditableTextField("ARROW-RIGHT");
-        twoFire = new UneditableTextField("ENTER");
+        twoUp = new KeyTextField("ARROW-UP");
+        twoDown = new KeyTextField("ARROW-DOWN");
+        twoLeft = new KeyTextField("ARROW-LEFT");
+        twoRight = new KeyTextField("ARROW-RIGHT");
+        twoFire = new KeyTextField("ENTER");
         // save button
         saveButton = new JButton("save");
-        // TODO: add action listener for save button
-        saveButton.setEnabled(false);
+        saveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO: add action listener for save button
+
+            }
+        });
         // back button
         backButton = new JButton("return to menu");
         backButton.addActionListener(new ActionListener() {
@@ -77,11 +116,39 @@ public class OptionMenu extends JPanel{
                 backgroundProcess.changeToGameMenu();
             }
         });
+        // update key from properties
+        updateKeyProp();
     }
 
-    public class UneditableTextField extends JTextField {
-        UneditableTextField(String text) {
-            setEditable(false);
+    class UppercaseDocumentFilter extends DocumentFilter {
+        public void insertString(DocumentFilter.FilterBypass fb, int offset,
+                                 String text, AttributeSet attr) throws BadLocationException {
+
+            fb.insertString(offset, text.toUpperCase(), attr);
+        }
+
+        public void replace(DocumentFilter.FilterBypass fb, int offset, int length,
+                            String text, AttributeSet attrs) throws BadLocationException {
+
+            fb.replace(offset, length, text.toUpperCase(), attrs);
+        }
+    }
+
+    public class KeyTextField extends JTextField {
+        KeyTextField() {
+            addKeyListener(new KeyAdapter() {
+                @Override
+                public void keyTyped(KeyEvent e) {
+                    if(getText().length() >= 1) {
+                        e.consume();
+                    }
+                }
+            });
+            ((AbstractDocument) getDocument()).setDocumentFilter(new UppercaseDocumentFilter());
+        }
+
+        KeyTextField(String text) {
+            this();
             setText(text);
         }
     }
