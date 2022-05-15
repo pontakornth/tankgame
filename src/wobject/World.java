@@ -103,4 +103,22 @@ public class World implements Observable<String> {
         if (tank != null)
             tank.setStop();
     }
+
+    public void moveTank(int tankIndex, Direction direction) {
+        Tank tank = tanks.get(tankIndex);
+        if (tank != null) {
+            if (direction == Direction.North) {
+                tank.turnNorth();
+            }
+            if (direction == Direction.South) {
+                tank.turnSouth();
+            }
+            if (direction == Direction.East) {
+                tank.turnEast();
+            }
+            if (direction == Direction.West) {
+                tank.turnWest();
+            }
+        }
+    }
 }

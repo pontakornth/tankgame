@@ -2,6 +2,7 @@ package gui;
 
 import util.Observable;
 import util.Observer;
+import wobject.Direction;
 import wobject.WObject;
 import wobject.World;
 
@@ -30,7 +31,7 @@ public class BattleField extends JPanel implements Observer<String> {
         setFocusable(true);
         requestFocusInWindow();
         setPreferredSize(new Dimension(SIZE*GRID_PIXEL, SIZE*GRID_PIXEL));
-        MovementListener movementListener = new MovementListener();
+        MovementListener movementListener = new MovementListener(this);
         movementListener.addObservers(this);
         addKeyListener(movementListener);
         world.init();
@@ -61,18 +62,23 @@ public class BattleField extends JPanel implements Observer<String> {
 
     private class MovementListener extends KeyAdapter implements Observable<String> {
         private Observer<String> observer;
+        private BattleField battleField;
+
+        public MovementListener(BattleField battleField) {
+            this.battleField = battleField;
+        }
         @Override
         public void keyPressed(KeyEvent e) {
             int keyCode = e.getKeyCode();
             // TODO: Handle second tank and stopping.
             if (keyCode == KeyEvent.VK_UP) {
-                notifyObservers("UP");
+                battleField.moveTank(0, Direction.North);
             } else if (keyCode == KeyEvent.VK_DOWN) {
-                notifyObservers("DOWN");
+                battleField.moveTank(0, Direction.South);
             } else if (keyCode == KeyEvent.VK_LEFT) {
-                notifyObservers("LEFT");
+                battleField.moveTank(0, Direction.West);
             } else if (keyCode == KeyEvent.VK_RIGHT) {
-                notifyObservers("RIGHT");
+                battleField.moveTank(0, Direction.East);
             }
         }
 
@@ -91,6 +97,10 @@ public class BattleField extends JPanel implements Observer<String> {
         public void notifyObservers(String message) {
             observer.onNotify(message);
         }
+    }
+
+    private void moveTank(int tankIndex, Direction direction) {
+        world.moveTank(tankIndex, direction);
     }
 
     // paint methods
