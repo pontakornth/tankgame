@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class MapReader {
 
-    private static List<String> read(String mapName) {
+    public static List<String> read(String mapName) {
         List<String> map = new ArrayList<>();
         try {
             BufferedReader reader = new BufferedReader(new FileReader(mapName));

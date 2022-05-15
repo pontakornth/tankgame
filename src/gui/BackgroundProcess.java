@@ -1,5 +1,7 @@
 package gui;
 
+import java.util.List;
+
 public class BackgroundProcess {
 
     private Window window;
@@ -31,17 +33,7 @@ public class BackgroundProcess {
         window.repaint();
     }
 
-    public void startOnePlayerGame() {
-        // TODO: add background process for start one player game
-    }
-
-    public void startTwoPlayerGame() {
-        // TODO: fix bug MovementListener disappear
-        window.getContentPane().removeAll();
-        window.setBattleField(new BattleField(this));
-        window.getContentPane().add(window.getBattleField());
-        window.getBattleField().requestFocus(); // in order to access the listener component need focus
-        window.revalidate();
-        window.repaint();
+    public void startGame(int playerNumber, List<String> map) {
+        // TODO: start game
     }
 }

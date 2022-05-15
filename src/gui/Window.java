@@ -1,5 +1,7 @@
 package gui;
 
+import config.MapReader;
+
 import javax.swing.*;
 
 public class Window extends JFrame {
@@ -35,7 +37,6 @@ public class Window extends JFrame {
         backgroundProcess = new BackgroundProcess(this);
         gameMenu = new GameMenu(backgroundProcess);
         optionMenu = new OptionMenu(backgroundProcess);
-        battleField = new BattleField(backgroundProcess);
     }
 
     public BattleField getBattleField() {

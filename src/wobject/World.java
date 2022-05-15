@@ -27,7 +27,34 @@ public class World implements Observable<String> {
             add(new Tank(5, 20, 1));
             add(new Tank(5, 5, 2));
         }};
+    }
 
+    public World(List<String> map, int playerNumber) {
+        // TODO: handle one/two players game
+        tanks = new ArrayList<>();
+        tiles = new ArrayList<>();
+        for(int i=0; i<23; i++) {
+            for(int j=0; j<23; j++) {
+                char c = map.get(i).charAt(j);
+                switch (c) {
+                    case '1':
+                        tanks.add(new Tank(j, i, 1));
+                        break;
+                    case '2':
+                        tanks.add(new Tank(j, i, 2));
+                        break;
+                    case 'B':
+                        tiles.add(new Brick(j, i));
+                        break;
+                    case 'T':
+                        tiles.add(new Trees(j, i));
+                        break;
+                    case 'S':
+                        tiles.add(new Steel(j, i));
+                        break;
+                }
+            }
+        }
     }
 
     public void init() {
