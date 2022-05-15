@@ -23,6 +23,14 @@ public class BackgroundProcess {
         window.repaint();
     }
 
+    public void changeToMapMenu(int playerNumber) {
+        window.getContentPane().removeAll();
+        window.setMapMenu(new MapMenu(this, playerNumber));
+        window.getContentPane().add(window.getMapMenu());
+        window.revalidate();
+        window.repaint();
+    }
+
     public void startOnePlayerGame() {
         // TODO: add background process for start one player game
     }

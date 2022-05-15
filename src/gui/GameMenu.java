@@ -42,6 +42,7 @@ public class GameMenu extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO: add event listener here
+                backgroundProcess.changeToMapMenu(1);
             }
         });
 
@@ -49,7 +50,7 @@ public class GameMenu extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO: add event listen here, now it's a template
-                backgroundProcess.startTwoPlayerGame();
+                backgroundProcess.changeToMapMenu(2);
             }
         });
     }
