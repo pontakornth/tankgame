@@ -30,24 +30,21 @@ public class World implements Observable<String> {
     }
 
     public void init() {
-        Thread thread = new Thread() {
-            @Override
-            public void run() {
-                while (true) {
-                    for (Tank tank: tanks) {
-                        tank.update();
-                    }
-                    notifyObservers("UPDATE");
-                    try {
-                        Thread.sleep(100 * 3);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-
+        Thread thread = new Thread(() -> {
+            while (true) {
+                for (Tank tank: tanks) {
+                    tank.update();
                 }
+                notifyObservers("UPDATE");
+                try {
+                    Thread.sleep(100 * 3);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+
             }
-        };
+        });
         thread.start();
     }
 
