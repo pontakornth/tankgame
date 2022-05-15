@@ -44,7 +44,6 @@ public class MovementConfig {
     }
 
     public void saveProp() {
-        // TODO: change to real one
         try {
             prop.store(new FileOutputStream(CONFIG_FILE), null);
         } catch (IOException e) {

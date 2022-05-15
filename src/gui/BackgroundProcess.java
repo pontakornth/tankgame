@@ -24,10 +24,10 @@ public class BackgroundProcess {
     }
 
     public void startOnePlayerGame() {
-
+        // TODO: add background process for start one player game
     }
 
     public void startTwoPlayerGame() {
-
+        // TODO: add background process for start two players game
     }
 }

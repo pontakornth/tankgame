@@ -98,7 +98,6 @@ public class OptionMenu extends JPanel{
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO: add action listener for save button
                 MovementConfig key = MovementConfig.getInstance();
                 // player one
                 key.updateProp("ONE_UP", KeyEvent.getExtendedKeyCodeForChar(oneUp.getText().charAt(0)));
@@ -112,7 +111,6 @@ public class OptionMenu extends JPanel{
                 key.updateProp("TWO_LEFT", KeyEvent.getExtendedKeyCodeForChar(twoLeft.getText().charAt(0)));
                 key.updateProp("TWO_RIGHT", KeyEvent.getExtendedKeyCodeForChar(twoRight.getText().charAt(0)));
                 key.updateProp("TWO_FIRE", KeyEvent.getExtendedKeyCodeForChar(twoFire.getText().charAt(0)));
-                System.out.println(twoFire.getText());
                 // save properties
                 key.saveProp();
             }
