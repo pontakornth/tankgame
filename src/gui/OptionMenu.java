@@ -1,5 +1,7 @@
 package gui;
 
+import config.MovementConfig;
+
 import javax.swing.*;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
@@ -32,9 +34,6 @@ public class OptionMenu extends JPanel{
     private JButton saveButton;
     private JButton backButton;
 
-    // Player Control Properties
-    Properties prop;
-
     OptionMenu(BackgroundProcess backgroundProcess) {
         this.backgroundProcess = backgroundProcess;
 
@@ -65,34 +64,23 @@ public class OptionMenu extends JPanel{
         add(backButton);
     }
 
-    public void readKeyProp() {
-        String CONFIG_FILE = "config/game-control.properties";
-        prop = new Properties();
-        try {
-            prop.load(new FileInputStream(CONFIG_FILE));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public void updateKeyProp() {
+        MovementConfig key = MovementConfig.getInstance();
         // player one
-        oneUp.setText(KeyEvent.getKeyText(Integer.parseInt(prop.getProperty("ONE_UP"))));
-        oneDown.setText(KeyEvent.getKeyText(Integer.parseInt(prop.getProperty("ONE_DOWN"))));
-        oneLeft.setText(KeyEvent.getKeyText(Integer.parseInt(prop.getProperty("ONE_LEFT"))));
-        oneRight.setText(KeyEvent.getKeyText(Integer.parseInt(prop.getProperty("ONE_RIGHT"))));
-        oneFire.setText(KeyEvent.getKeyText(Integer.parseInt(prop.getProperty("ONE_FIRE"))));
+        oneUp.setText(key.getKeyText("ONE_UP"));
+        oneDown.setText(key.getKeyText("ONE_DOWN"));
+        oneLeft.setText(key.getKeyText("ONE_LEFT"));
+        oneRight.setText(key.getKeyText("ONE_RIGHT"));
+        oneFire.setText(key.getKeyText("ONE_FIRE"));
         // player two
-        twoUp.setText(KeyEvent.getKeyText(Integer.parseInt(prop.getProperty("TWO_UP"))));
-        twoDown.setText(KeyEvent.getKeyText(Integer.parseInt(prop.getProperty("TWO_DOWN"))));
-        twoLeft.setText(KeyEvent.getKeyText(Integer.parseInt(prop.getProperty("TWO_LEFT"))));
-        twoRight.setText(KeyEvent.getKeyText(Integer.parseInt(prop.getProperty("TWO_RIGHT"))));
-        twoFire.setText(KeyEvent.getKeyText(Integer.parseInt(prop.getProperty("TWO_FIRE"))));
+        twoUp.setText(key.getKeyText("TWO_UP"));
+        twoDown.setText(key.getKeyText("TWO_DOWN"));
+        twoLeft.setText(key.getKeyText("TWO_LEFT"));
+        twoRight.setText(key.getKeyText("TWO_RIGHT"));
+        twoFire.setText(key.getKeyText("TWO_FIRE"));
     }
 
     private void initMenu() {
-        // read properties file
-        readKeyProp();
         // player 1 setting
         oneUp = new KeyTextField();
         oneDown = new KeyTextField();
@@ -111,7 +99,7 @@ public class OptionMenu extends JPanel{
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO: add action listener for save button
-                System.out.println(KeyEvent.VK_P);
+
             }
         });
         // back button

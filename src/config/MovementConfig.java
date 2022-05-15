@@ -1,5 +1,6 @@
 package config;
 
+import java.awt.event.KeyEvent;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
@@ -24,6 +25,10 @@ public class MovementConfig {
 
     public int getKeyCode(String propName) {
         return Integer.parseInt(prop.getProperty(propName));
+    }
+
+    public String getKeyText(String propName) {
+        return KeyEvent.getKeyText(getKeyCode(propName));
     }
 
     public static void readProp() {
