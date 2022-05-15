@@ -17,10 +17,11 @@ public class World implements Observable<String> {
 
     public World() {
         // TODO: Load map from files instead.
+        // TODO: Tiles must be located based on index.
         tiles = new ArrayList<>() {{
             add(new Brick(0, 0));
-            add(new Steel(1, 1));
-            add(new Trees(2, 2));
+            add(new Steel(1, 0));
+            add(new Trees(2, 0));
         }};
         tanks = new ArrayList<>(){{
             add(new Tank(5, 20, 1));
@@ -33,7 +34,9 @@ public class World implements Observable<String> {
         Thread thread = new Thread(() -> {
             while (true) {
                 for (Tank tank: tanks) {
-                    tank.update();
+                    if (!willCollide(tank)) {
+                            tank.update();
+                    }
                 }
                 notifyObservers("UPDATE");
                 try {
@@ -46,6 +49,18 @@ public class World implements Observable<String> {
             }
         });
         thread.start();
+    }
+
+    private boolean willCollide(Tank tank) {
+        int newX = tank.getX() + tank.getDx();
+        int newY = tank.getY() + tank.getDy();
+        // TODO: Handle tank collision
+        // TODO: Replace 23 with world size
+        int index = newY*23 + newX;
+        if (index < 0 || index >= tiles.size())
+            return false;
+        WObject tile = tiles.get(index);
+        return tile.isSolid();
     }
 
     public List<WObject> getTiles() {

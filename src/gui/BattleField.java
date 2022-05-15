@@ -39,24 +39,7 @@ public class BattleField extends JPanel implements Observer<String> {
 
     @Override
     public void onNotify(String message) {
-        // Handle Tank Movement
-        // TODO: Handle multiple tanks
-        if (message.equals("UP")) {
-            world.moveTankNorth();
-        }
-        if (message.equals("DOWN")) {
-            world.moveTankSouth();
-        }
-
-        if (message.equals("LEFT")) {
-            world.moveTankWest();
-        }
-        if (message.equals("RIGHT")) {
-            world.moveTankEast();
-        }
-        if (message.equals("RELEASE")) {
-            world.stopTank();
-        }
+        // TODO: Handle update from world such as losing.
         repaint();
     }
 

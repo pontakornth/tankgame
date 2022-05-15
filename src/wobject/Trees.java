@@ -14,4 +14,9 @@ public class Trees extends WObject {
     public String getSpriteFileName() {
         return "./img/tree.png";
     }
+
+    @Override
+    public boolean isSolid() {
+        return false;
+    }
 }
