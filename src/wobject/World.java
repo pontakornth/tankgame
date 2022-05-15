@@ -82,12 +82,6 @@ public class World implements Observable<String> {
         observer.onNotify(message);
     }
 
-    public void stopTank() {
-        Tank tank = tanks.get(0);
-        if (tank != null)
-            tank.setStop();
-    }
-
     public void moveTank(int tankIndex, Direction direction) {
         Tank tank = tanks.get(tankIndex);
         if (tank != null) {
