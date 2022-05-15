@@ -1,14 +1,20 @@
 package gui;
 
+import util.Observable;
+import util.Observer;
+import wobject.Direction;
 import wobject.WObject;
 import wobject.World;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BattleField extends JPanel {
+public class BattleField extends JPanel implements Observer<String> {
 
     // TODO: add world object and update its graphic
     private World world;
@@ -18,10 +24,95 @@ public class BattleField extends JPanel {
     private int SIZE = 23;
     private int GRID_PIXEL = 30;
 
-    BattleField() {
+    private BackgroundProcess backgroundProcess;
+
+    BattleField(BackgroundProcess backgroundProcess) {
+        this.backgroundProcess = backgroundProcess;
+
         world = new World();
+        world.addObservers(this);
         imageMap = new HashMap<>();
+        setFocusable(true);
         setPreferredSize(new Dimension(SIZE*GRID_PIXEL, SIZE*GRID_PIXEL));
+        MovementListener movementListener = new MovementListener(this);
+        movementListener.addObservers(this);
+        addKeyListener(movementListener);
+        world.init();
+    }
+
+    @Override
+    public void onNotify(String message) {
+        // TODO: Handle update from world such as losing.
+        repaint();
+    }
+
+    private class MovementListener extends KeyAdapter implements Observable<String> {
+        private Observer<String> observer;
+        private BattleField battleField;
+
+        public MovementListener(BattleField battleField) {
+            this.battleField = battleField;
+        }
+        @Override
+        public void keyPressed(KeyEvent e) {
+            int keyCode = e.getKeyCode();
+            // TODO: Handle second tank and stopping.
+            if (keyCode == KeyEvent.VK_UP) {
+                battleField.moveTank(0, Direction.North);
+            } else if (keyCode == KeyEvent.VK_DOWN) {
+                battleField.moveTank(0, Direction.South);
+            } else if (keyCode == KeyEvent.VK_LEFT) {
+                battleField.moveTank(0, Direction.West);
+            } else if (keyCode == KeyEvent.VK_RIGHT) {
+                battleField.moveTank(0, Direction.East);
+            }
+
+            if (keyCode == KeyEvent.VK_W) {
+                battleField.moveTank(1, Direction.North);
+            } else if (keyCode == KeyEvent.VK_S) {
+                battleField.moveTank(1, Direction.South);
+            } else if (keyCode == KeyEvent.VK_A) {
+                battleField.moveTank(1, Direction.West);
+            } else if (keyCode == KeyEvent.VK_D) {
+                battleField.moveTank(1, Direction.East);
+            }
+        }
+
+        @Override
+        public void keyReleased(KeyEvent e) {
+            // TODO: Receive array of keys from config instead
+            int[] player1 = new int[]{KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT};
+            int[] player2 = new int[]{KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D};
+            for (int key: player1) {
+                if (key == e.getKeyCode()) {
+                    battleField.stopTank(0);
+                }
+            }
+            for (int key: player2) {
+                if (key == e.getKeyCode()) {
+                    battleField.stopTank(1);
+                }
+            }
+        }
+
+        @Override
+        public void addObservers(Observer<String> observer) {
+            if (this.observer == null)
+                this.observer = observer;
+        }
+
+        @Override
+        public void notifyObservers(String message) {
+            observer.onNotify(message);
+        }
+    }
+
+    private void stopTank(int tankIndex) {
+        world.stopTank(tankIndex);
+    }
+
+    private void moveTank(int tankIndex, Direction direction) {
+        world.moveTank(tankIndex, direction);
     }
 
     // paint methods
@@ -29,8 +120,9 @@ public class BattleField extends JPanel {
     public void paint(Graphics g) {
         super.paint(g);
         paintGrid(g);
-        paintTiles(g);
         paintTanks(g);
+        // So tiles can overwrite tanks
+        paintTiles(g);
     }
 
     public void paintGrid(Graphics g) {
