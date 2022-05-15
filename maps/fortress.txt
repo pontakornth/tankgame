@@ -6,13 +6,13 @@
 -----------------------
 -----------------------
 -----------------------
---TTTT-----------TTTT--
+--TTTTTT-------TTTTTT--
 TTTTTTTTTTTTTTTTTTTTTTT
 SSSBBBBSSSSSSSSSBBBBSSS
 SSSBBBBSSSSSSSSSBBBBSSS
 SSSBBBBSSSSSSSSSBBBBSSS
 TTTTTTTTTTTTTTTTTTTTTTT
---TTTT-----------TTTT--
+--TTTTTT-------TTTTTT--
 -----------------------
 -----------------------
 -----------------------

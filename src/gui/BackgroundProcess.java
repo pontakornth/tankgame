@@ -33,7 +33,12 @@ public class BackgroundProcess {
         window.repaint();
     }
 
-    public void startGame(int playerNumber, List<String> map) {
-        // TODO: start game
+    public void changeToGame(int playerNumber, List<String> map) {
+        window.getContentPane().removeAll();
+        window.setBattleField(new BattleField(this, playerNumber, map));
+        window.getContentPane().add(window.getBattleField());
+        window.getBattleField().requestFocus();
+        window.revalidate();
+        window.repaint();
     }
 }

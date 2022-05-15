@@ -26,11 +26,4 @@ public class MapReader {
         }
         return map;
     }
-
-    public static void main(String[] args) {
-        List<String> a = MapReader.read("maps/plain.txt");
-        for(String s: a) {
-            System.out.println(s);
-        }
-    }
 }

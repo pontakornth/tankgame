@@ -1,5 +1,7 @@
 package gui;
 
+import config.MapReader;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -12,8 +14,8 @@ public class MapMenu extends JPanel {
     private int playerNumber;
 
     private List<JButton> stageButtons;
-    private List<String> stageNames = new ArrayList<>(List.of("plain", "fortress"));
-    private List<String> stageFiles = new ArrayList<>(List.of("maps/plain.txt", "maps/fortress.txt"));
+    private List<String> stageNames = new ArrayList<>(List.of("plain", "fortress", "maze"));
+    private List<String> stageFiles = new ArrayList<>(List.of("maps/plain.txt", "maps/fortress.txt", "maps/maze.txt"));
 
     private JButton backButton;
 
@@ -37,15 +39,15 @@ public class MapMenu extends JPanel {
     private void initMenu() {
         stageButtons = new ArrayList<JButton>();
         for(int i=0; i<stageNames.size(); i++) {
-            stageButtons.add(new JButton(stageNames.get(i)));
-        }
-        for(JButton button: stageButtons) {
+            String stageFile = stageFiles.get(i);
+            JButton button = new JButton(stageNames.get(i));
             button.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    // TODO: add action listener for all button
+                    backgroundProcess.changeToGame(playerNumber, MapReader.read(stageFile));
                 }
             });
+            stageButtons.add(button);
         }
         backButton = new JButton("return to menu");
         backButton.addActionListener(new ActionListener() {
