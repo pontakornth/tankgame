@@ -11,4 +11,9 @@ public interface Movable {
     public void setStop();
     public void update();
 
+    // These coordinates are required for bullet and tank can share same interface.
+    int getX();
+    int getY();
+    int getDx();
+    int getDy();
 }
