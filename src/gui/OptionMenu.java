@@ -39,7 +39,7 @@ public class OptionMenu extends JPanel{
 
         initMenu();
 
-        setLayout(new GridLayout(0, 4));
+        setLayout(null);
         add(new JLabel("Player 1 UP:"));
         add(oneUp);
         add(new JLabel("Player 2 UP:"));
@@ -84,20 +84,34 @@ public class OptionMenu extends JPanel{
     }
 
     private void initMenu() {
+        Dimension buttonSize = new Dimension(201, 51);
+        Dimension textFieldSize = new Dimension(100, 30);
+
         // player 1 setting
         oneUp = new KeyTextField();
+        oneUp.setBounds(214, 188, textFieldSize.width, textFieldSize.height);
         oneDown = new KeyTextField();
+        oneDown.setBounds(214, 260, textFieldSize.width, textFieldSize.height);
         oneLeft = new KeyTextField();
+        oneLeft.setBounds(214, 332, textFieldSize.width, textFieldSize.height);
         oneRight = new KeyTextField();
+        oneRight.setBounds(214, 404, textFieldSize.width, textFieldSize.height);
         oneFire = new KeyTextField();
+        oneFire.setBounds(214, 476, textFieldSize.width, textFieldSize.height);
         // player 2 setting
         twoUp = new KeyTextField();
+        twoUp.setBounds(563, 188, textFieldSize.width, textFieldSize.height);
         twoDown = new KeyTextField();
+        twoDown.setBounds(563, 260, textFieldSize.width, textFieldSize.height);
         twoLeft = new KeyTextField();
+        twoLeft.setBounds(563, 332, textFieldSize.width, textFieldSize.height);
         twoRight = new KeyTextField();
+        twoRight.setBounds(563, 404, textFieldSize.width, textFieldSize.height);
         twoFire = new KeyTextField();
+        twoFire.setBounds(563, 476, textFieldSize.width, textFieldSize.height);
         // save button
-        saveButton = new JButton("save");
+        saveButton = new JButton("Save");
+        saveButton.setBounds(124, 584, buttonSize.width, buttonSize.height);
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -119,7 +133,8 @@ public class OptionMenu extends JPanel{
             }
         });
         // back button
-        backButton = new JButton("return to menu");
+        backButton = new JButton("Return to Menu");
+        backButton.setBounds(364, 584, buttonSize.width, buttonSize.height);
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -128,6 +143,12 @@ public class OptionMenu extends JPanel{
         });
         // update key from properties
         updateKeyProp();
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.drawImage(new ImageIcon("img/bg-option-menu.png").getImage(), 0, 0, null);
     }
 
     class UppercaseDocumentFilter extends DocumentFilter {
