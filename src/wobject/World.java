@@ -13,6 +13,10 @@ public class World implements Observable<String> {
     private List<WObject> tiles;
 
     private List<Tank> tanks;
+
+    // Only bullets on screen are listed here.
+    private List<Bullet> bullets;
+    private BulletPool bulletPool;
     private Observer<String> observer;
 
     public World() {
@@ -27,12 +31,15 @@ public class World implements Observable<String> {
             add(new Tank(5, 20, 1));
             add(new Tank(5, 5, 2));
         }};
+        bullets = new ArrayList<>();
+        bulletPool = new BulletPool();
     }
 
     public World(List<String> map, int playerNumber) {
         // TODO: handle one/two players game
         tanks = new ArrayList<>();
         tiles = new ArrayList<>();
+        bullets = new ArrayList<>();
         for(int i=0; i<23; i++) {
             for(int j=0; j<23; j++) {
                 char c = map.get(i).charAt(j);
@@ -55,15 +62,52 @@ public class World implements Observable<String> {
                 }
             }
         }
+        bulletPool = new BulletPool();
     }
 
     public void init() {
         Thread thread = new Thread(() -> {
+            // TODO: Add win condition.
             while (true) {
                 for (Tank tank: tanks) {
                     if (!willCollide(tank)) {
                             tank.update();
                     }
+                }
+                List<Bullet> bulletsToRemove = new ArrayList<>();
+                List<WObject> tilesToRemove = new ArrayList<>();
+                for (Bullet bullet : bullets) {
+                    // TODO: Check collision against brick and tanks
+                    if (bullet.isOutsideBorder(23, 23)) {
+                        bulletPool.returnBullet(bullet);
+                        bulletsToRemove.add(bullet);
+                    }
+                    ;
+                    bullet.update();
+                }
+                for (WObject tile : tiles) {
+                    // Only check for solid tile.
+                    if (tile.isSolid()) {
+                        for (Bullet bullet : bullets) {
+                            if (tile.getX() == bullet.getX() && tile.getY() == bullet.getY()) {
+                                // Collide!
+                                boolean hit = tile.damage();
+                                if (hit) {
+                                    bulletsToRemove.add(bullet);
+                                    bulletPool.returnBullet(bullet);
+                                    if (tile.getLifePoint() == 0) {
+                                        tilesToRemove.add(tile);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                for (Bullet indexBulletToRemove: bulletsToRemove) {
+                    bullets.remove(indexBulletToRemove);
+                }
+                for (WObject tileToRemove: tilesToRemove) {
+                    tiles.remove(tileToRemove);
                 }
                 notifyObservers("UPDATE");
                 try {
@@ -138,5 +182,30 @@ public class World implements Observable<String> {
         Tank tank = tanks.get(tankIndex);
         if (tank != null)
             tank.setStop();
+    }
+
+    public void fireBullet(int tankIndex) {
+        Tank tank = tanks.get(tankIndex);
+        if (tank != null) {
+            int tankX = tank.getX();
+            int tankY = tank.getY();
+            Bullet bullet;
+            Direction direction = tank.getDirection();
+            if (direction == Direction.North) {
+                bullet = bulletPool.requestBullet(tankX, tankY, 0, -1);
+            } else if (direction == Direction.South) {
+                bullet = bulletPool.requestBullet(tankX, tankY, 0, 1);
+            } else if (direction == Direction.East) {
+                bullet = bulletPool.requestBullet(tankX, tankY, 1, 0);
+            } else {
+                // West is the only direction left.
+                bullet = bulletPool.requestBullet(tankX, tankY, -1, 0);
+            }
+            bullets.add(bullet);
+        }
+    }
+
+    public List<Bullet> getBullets() {
+        return bullets;
     }
 }

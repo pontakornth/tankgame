@@ -13,6 +13,20 @@ public class Brick extends WObject {
 
     @Override
     public String getSpriteFileName() {
-        return "./img/wall-1.png";
+        if (lifePoint == 4) {
+            return "./img/wall-1.png";
+        } else if (lifePoint == 3) {
+            return "./img/wall-2.png";
+        } else if (lifePoint == 2) {
+            return "./img/wall-3.png";
+        }
+
+        return "./img/wall-4.png";
+    }
+
+    @Override
+    public boolean damage() {
+        lifePoint--;
+        return true;
     }
 }

@@ -53,4 +53,10 @@ public abstract class WObject {
     public boolean isSolid() {
         return true;
     }
+
+    /**
+     * Damage the tile
+     * @return True if the tile is damaged.
+     */
+    public boolean damage() { return false; }
 }

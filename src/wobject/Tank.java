@@ -7,6 +7,7 @@ public class Tank extends WObject implements Movable{
 
     public Tank(int x, int y, int lifePoint) {
        super(x, y, lifePoint);
+       // TODO: Add information about side.
        directionImageFileName = new HashMap<>();
        directionImageFileName.put(Direction.North, "./img/blue-tank-front.png");
        directionImageFileName.put(Direction.South, "./img/blue-tank-back.png");
@@ -72,6 +73,10 @@ public class Tank extends WObject implements Movable{
 
     public int getDy() {
         return dy;
+    }
+
+    public Direction getDirection() {
+        return direction;
     }
     // TODO: Add functionality to tank.
 }
