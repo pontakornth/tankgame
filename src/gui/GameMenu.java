@@ -16,8 +16,8 @@ public class GameMenu extends JPanel {
         this.backgroundProcess = backgroundProcess;
 
         initMenu();
-        setLayout(new GridLayout(0, 1));
-        add(new JLabel("TANK GAME"));
+
+        setLayout(null);
         add(onePlayerButton);
         add(twoPlayerButton);
         add(optionButton);
@@ -27,9 +27,13 @@ public class GameMenu extends JPanel {
     }
 
     private void initMenu() {
+        Dimension buttonSize = new Dimension(201, 51);
         onePlayerButton = new JButton("1 Player");
+        onePlayerButton.setBounds(244, 249, buttonSize.width, buttonSize.height);
         twoPlayerButton = new JButton("2 Players");
+        twoPlayerButton.setBounds(244, 319, buttonSize.width, buttonSize.height);
         optionButton = new JButton("Options");
+        optionButton.setBounds(244, 389, buttonSize.width, buttonSize.height);
 
         optionButton.addActionListener(new ActionListener() {
             @Override
@@ -41,7 +45,6 @@ public class GameMenu extends JPanel {
         onePlayerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO: add event listener here
                 backgroundProcess.changeToMapMenu(1);
             }
         });
@@ -55,5 +58,11 @@ public class GameMenu extends JPanel {
                 backgroundProcess.changeToMapMenu(2);
             }
         });
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.drawImage(new ImageIcon("img/bg-game-menu.png").getImage(), 0, 0, null);
     }
 }
