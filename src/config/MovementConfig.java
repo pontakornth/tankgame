@@ -11,6 +11,25 @@ public class MovementConfig {
     private static Properties prop;
     private static String CONFIG_FILE = "config/game-control.properties";
 
+    public static enum KeyProp {
+        ONE_UP("ONE_UP"),
+        ONE_DOWN("ONE_DOWN"),
+        ONE_LEFT("ONE_LEFT"),
+        ONE_RIGHT("ONE_RIGHT"),
+        ONE_FIRE("ONE_FIRE"),
+        TWO_UP("TWO_UP"),
+        TWO_DOWN("TWO_DOWN"),
+        TWO_LEFT("TWO_LEFT"),
+        TWO_RIGHT("TWO_RIGHT"),
+        TWO_FIRE("TWO_FIRE");
+
+        public final String propName;
+
+        private KeyProp(String propName) {
+            this.propName = propName;
+        }
+    }
+
     private MovementConfig() {
         prop = new Properties();
     }
@@ -23,12 +42,12 @@ public class MovementConfig {
         return movementConfig;
     }
 
-    public int getKeyCode(String propName) {
-        return Integer.parseInt(prop.getProperty(propName));
+    public int getKeyCode(KeyProp keyProp) {
+        return Integer.parseInt(prop.getProperty(keyProp.propName));
     }
 
-    public String getKeyText(String propName) {
-        return KeyEvent.getKeyText(getKeyCode(propName));
+    public String getKeyText(KeyProp keyProp) {
+        return KeyEvent.getKeyText(getKeyCode(keyProp));
     }
 
     public static void readProp() {
@@ -39,8 +58,8 @@ public class MovementConfig {
         }
     }
 
-    public void updateProp(String propName, int keyCode) {
-        prop.setProperty(propName, String.valueOf(keyCode));
+    public void updateProp(KeyProp keyProp, int keyCode) {
+        prop.setProperty(keyProp.propName, String.valueOf(keyCode));
     }
 
     public void saveProp() {

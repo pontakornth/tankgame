@@ -12,11 +12,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.security.Key;
-import java.util.Properties;
+
+import config.MovementConfig.KeyProp;
 
 public class OptionMenu extends JPanel{
 
@@ -60,17 +58,17 @@ public class OptionMenu extends JPanel{
     public void updateKeyProp() {
         MovementConfig key = MovementConfig.getInstance();
         // player one
-        oneUp.setText(key.getKeyText("ONE_UP"));
-        oneDown.setText(key.getKeyText("ONE_DOWN"));
-        oneLeft.setText(key.getKeyText("ONE_LEFT"));
-        oneRight.setText(key.getKeyText("ONE_RIGHT"));
-        oneFire.setText(key.getKeyText("ONE_FIRE"));
+        oneUp.setText(key.getKeyText(KeyProp.ONE_UP));
+        oneDown.setText(key.getKeyText(KeyProp.ONE_DOWN));
+        oneLeft.setText(key.getKeyText(KeyProp.ONE_LEFT));
+        oneRight.setText(key.getKeyText(KeyProp.ONE_RIGHT));
+        oneFire.setText(key.getKeyText(KeyProp.ONE_FIRE));
         // player two
-        twoUp.setText(key.getKeyText("TWO_UP"));
-        twoDown.setText(key.getKeyText("TWO_DOWN"));
-        twoLeft.setText(key.getKeyText("TWO_LEFT"));
-        twoRight.setText(key.getKeyText("TWO_RIGHT"));
-        twoFire.setText(key.getKeyText("TWO_FIRE"));
+        twoUp.setText(key.getKeyText(KeyProp.TWO_UP));
+        twoDown.setText(key.getKeyText(KeyProp.TWO_DOWN));
+        twoLeft.setText(key.getKeyText(KeyProp.TWO_LEFT));
+        twoRight.setText(key.getKeyText(KeyProp.TWO_RIGHT));
+        twoFire.setText(key.getKeyText(KeyProp.TWO_FIRE));
     }
 
     private void initMenu() {
@@ -107,17 +105,17 @@ public class OptionMenu extends JPanel{
             public void actionPerformed(ActionEvent e) {
                 MovementConfig key = MovementConfig.getInstance();
                 // player one
-                key.updateProp("ONE_UP", KeyEvent.getExtendedKeyCodeForChar(oneUp.getText().charAt(0)));
-                key.updateProp("ONE_DOWN", KeyEvent.getExtendedKeyCodeForChar(oneDown.getText().charAt(0)));
-                key.updateProp("ONE_LEFT", KeyEvent.getExtendedKeyCodeForChar(oneLeft.getText().charAt(0)));
-                key.updateProp("ONE_RIGHT", KeyEvent.getExtendedKeyCodeForChar(oneRight.getText().charAt(0)));
-                key.updateProp("ONE_FIRE", KeyEvent.getExtendedKeyCodeForChar(oneFire.getText().charAt(0)));
+                key.updateProp(KeyProp.ONE_UP, KeyEvent.getExtendedKeyCodeForChar(oneUp.getText().charAt(0)));
+                key.updateProp(KeyProp.ONE_DOWN, KeyEvent.getExtendedKeyCodeForChar(oneDown.getText().charAt(0)));
+                key.updateProp(KeyProp.ONE_LEFT, KeyEvent.getExtendedKeyCodeForChar(oneLeft.getText().charAt(0)));
+                key.updateProp(KeyProp.ONE_RIGHT, KeyEvent.getExtendedKeyCodeForChar(oneRight.getText().charAt(0)));
+                key.updateProp(KeyProp.ONE_FIRE, KeyEvent.getExtendedKeyCodeForChar(oneFire.getText().charAt(0)));
                 // player two
-                key.updateProp("TWO_UP", KeyEvent.getExtendedKeyCodeForChar(twoUp.getText().charAt(0)));
-                key.updateProp("TWO_DOWN", KeyEvent.getExtendedKeyCodeForChar(twoDown.getText().charAt(0)));
-                key.updateProp("TWO_LEFT", KeyEvent.getExtendedKeyCodeForChar(twoLeft.getText().charAt(0)));
-                key.updateProp("TWO_RIGHT", KeyEvent.getExtendedKeyCodeForChar(twoRight.getText().charAt(0)));
-                key.updateProp("TWO_FIRE", KeyEvent.getExtendedKeyCodeForChar(twoFire.getText().charAt(0)));
+                key.updateProp(KeyProp.TWO_UP, KeyEvent.getExtendedKeyCodeForChar(twoUp.getText().charAt(0)));
+                key.updateProp(KeyProp.TWO_DOWN, KeyEvent.getExtendedKeyCodeForChar(twoDown.getText().charAt(0)));
+                key.updateProp(KeyProp.TWO_LEFT, KeyEvent.getExtendedKeyCodeForChar(twoLeft.getText().charAt(0)));
+                key.updateProp(KeyProp.TWO_RIGHT, KeyEvent.getExtendedKeyCodeForChar(twoRight.getText().charAt(0)));
+                key.updateProp(KeyProp.TWO_FIRE, KeyEvent.getExtendedKeyCodeForChar(twoFire.getText().charAt(0)));
                 // save properties
                 key.saveProp();
             }

@@ -15,6 +15,7 @@ import java.awt.event.KeyListener;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
+import config.MovementConfig.KeyProp;
 
 public class BattleField extends JPanel implements Observer<String> {
 
@@ -64,27 +65,27 @@ public class BattleField extends JPanel implements Observer<String> {
             MovementConfig movementConfig = MovementConfig.getInstance();
             int keyCode = e.getKeyCode();
             // TODO: Handle second tank and stopping.
-            if (keyCode == movementConfig.getKeyCode("ONE_UP")) {
+            if (keyCode == movementConfig.getKeyCode(KeyProp.ONE_UP)) {
                 battleField.moveTank(0, Direction.North);
-            } else if (keyCode == movementConfig.getKeyCode("ONE_DOWN")) {
+            } else if (keyCode == movementConfig.getKeyCode(KeyProp.ONE_DOWN)) {
                 battleField.moveTank(0, Direction.South);
-            } else if (keyCode == movementConfig.getKeyCode("ONE_LEFT")) {
+            } else if (keyCode == movementConfig.getKeyCode(KeyProp.ONE_LEFT)) {
                 battleField.moveTank(0, Direction.West);
-            } else if (keyCode == movementConfig.getKeyCode("ONE_RIGHT")) {
+            } else if (keyCode == movementConfig.getKeyCode(KeyProp.ONE_RIGHT)) {
                 battleField.moveTank(0, Direction.East);
-            } else if (keyCode == movementConfig.getKeyCode("ONE_FIRE")) {
+            } else if (keyCode == movementConfig.getKeyCode(KeyProp.ONE_FIRE)) {
                 battleField.fireBullet(0);
             }
 
-            if (keyCode == movementConfig.getKeyCode("TWO_UP")) {
+            if (keyCode == movementConfig.getKeyCode(KeyProp.TWO_UP)) {
                 battleField.moveTank(1, Direction.North);
-            } else if (keyCode == movementConfig.getKeyCode("TWO_DOWN")) {
+            } else if (keyCode == movementConfig.getKeyCode(KeyProp.TWO_DOWN)) {
                 battleField.moveTank(1, Direction.South);
-            } else if (keyCode == movementConfig.getKeyCode("TWO_LEFT")) {
+            } else if (keyCode == movementConfig.getKeyCode(KeyProp.TWO_LEFT)) {
                 battleField.moveTank(1, Direction.West);
-            } else if (keyCode == movementConfig.getKeyCode("TWO_RIGHT")) {
+            } else if (keyCode == movementConfig.getKeyCode(KeyProp.TWO_RIGHT)) {
                 battleField.moveTank(1, Direction.East);
-            } else if (keyCode == movementConfig.getKeyCode("TWO_FIRE")) {
+            } else if (keyCode == movementConfig.getKeyCode(KeyProp.TWO_FIRE)) {
                 battleField.fireBullet(1);
             }
         }
@@ -94,16 +95,16 @@ public class BattleField extends JPanel implements Observer<String> {
             // TODO: Receive array of keys from config instead
             MovementConfig movementConfig = MovementConfig.getInstance();
             int[] player1 = new int[]{
-                    movementConfig.getKeyCode("ONE_UP"),
-                    movementConfig.getKeyCode("ONE_DOWN"),
-                    movementConfig.getKeyCode("ONE_LEFT"),
-                    movementConfig.getKeyCode("ONE_RIGHT")
+                    movementConfig.getKeyCode(KeyProp.ONE_UP),
+                    movementConfig.getKeyCode(KeyProp.ONE_DOWN),
+                    movementConfig.getKeyCode(KeyProp.ONE_LEFT),
+                    movementConfig.getKeyCode(KeyProp.ONE_RIGHT)
             };
             int[] player2 = new int[]{
-                    movementConfig.getKeyCode("TWO_UP"),
-                    movementConfig.getKeyCode("TWO_DOWN"),
-                    movementConfig.getKeyCode("TWO_LEFT"),
-                    movementConfig.getKeyCode("TWO_RIGHT"),
+                    movementConfig.getKeyCode(KeyProp.TWO_UP),
+                    movementConfig.getKeyCode(KeyProp.TWO_DOWN),
+                    movementConfig.getKeyCode(KeyProp.TWO_LEFT),
+                    movementConfig.getKeyCode(KeyProp.TWO_RIGHT),
 
             };
             for (int key: player1) {
