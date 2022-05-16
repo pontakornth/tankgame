@@ -40,25 +40,15 @@ public class OptionMenu extends JPanel{
         initMenu();
 
         setLayout(null);
-        add(new JLabel("Player 1 UP:"));
         add(oneUp);
-        add(new JLabel("Player 2 UP:"));
         add(twoUp);
-        add(new JLabel("Player 1 DOWN:"));
         add(oneDown);
-        add(new JLabel("Player 2 DOWN:"));
         add(twoDown);
-        add(new JLabel("Player 1 LEFT:"));
         add(oneLeft);
-        add(new JLabel("Player 2 LEFT:"));
         add(twoLeft);
-        add(new JLabel("Player 1 RIGHT:"));
         add(oneRight);
-        add(new JLabel("Player 2 RIGHT:"));
         add(twoRight);
-        add(new JLabel("Player 1 FIRE:"));
         add(oneFire);
-        add(new JLabel("Player 2 FIRE:"));
         add(twoFire);
         add(saveButton);
         add(backButton);

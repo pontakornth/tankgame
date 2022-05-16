@@ -25,8 +25,7 @@ public class MapMenu extends JPanel {
 
         initMenu();
 
-        setLayout(new GridLayout(0, 1));
-        add(new JLabel("Map Selection"));
+        setLayout(null);
         for(JButton button: stageButtons) {
             add(button);
         }
@@ -37,6 +36,7 @@ public class MapMenu extends JPanel {
     }
 
     private void initMenu() {
+        Dimension buttonSize = new Dimension(201, 51);
         stageButtons = new ArrayList<JButton>();
         for(int i=0; i<stageNames.size(); i++) {
             String stageFile = stageFiles.get(i);
@@ -47,14 +47,22 @@ public class MapMenu extends JPanel {
                     backgroundProcess.changeToGame(playerNumber, MapReader.read(stageFile));
                 }
             });
+            button.setBounds(244, 249+i*70, buttonSize.width, buttonSize.height);
             stageButtons.add(button);
         }
         backButton = new JButton("return to menu");
+        backButton.setBounds(244, 459, buttonSize.width, buttonSize.height);
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 backgroundProcess.changeToGameMenu();
             }
         });
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.drawImage(new ImageIcon("img/bg-map-menu.png").getImage(), 0, 0, null);
     }
 }
