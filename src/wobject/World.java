@@ -81,11 +81,20 @@ public class World implements Observable<String> {
         int newY = tank.getY() + tank.getDy();
         // TODO: Handle tank collision
         // TODO: Replace 23 with world size
-        int index = newY*23 + newX;
-        if (index < 0 || index >= tiles.size())
-            return false;
-        WObject tile = tiles.get(index);
-        return tile.isSolid();
+//        int index = newY*23 + newX;
+//        if (index < 0 || index >= tiles.size())
+//            return false;
+//        WObject tile = tiles.get(index);
+//        return tile.isSolid();
+        if(newX < 0 || newX >= 23 || newY < 0 || newY >= 23) {
+            return true;
+        }
+        for(WObject t: tiles) {
+            if(t.getX() == newX && t.getY() == newY) {
+                return t.isSolid();
+            }
+        }
+        return false;
     }
 
     public List<WObject> getTiles() {
