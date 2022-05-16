@@ -74,6 +74,19 @@ public class World implements Observable<String> {
                             tank.update();
                     }
                 }
+                List<Integer> indexBulletsToRemove = new ArrayList<>();
+                for (int i = 0; i < bullets.size(); i++) {
+                    // TODO: Check collision against brick and tanks
+                    Bullet bullet  = bullets.get(i);
+                    if (bullet.isOutsideBorder(23, 23)) {
+                        bulletPool.returnBullet(bullet);
+                        indexBulletsToRemove.add(i);
+                    };
+                    bullet.update();
+                }
+                for (int indexBulletToRemove: indexBulletsToRemove) {
+                    bullets.remove(indexBulletToRemove);
+                }
                 notifyObservers("UPDATE");
                 try {
                     Thread.sleep(100 * 3);

@@ -66,4 +66,8 @@ public class Bullet extends WObject implements Movable {
         this.dx = dx;
         this.dy = dy;
     }
+
+    public boolean isOutsideBorder(int borderHorizontalSize, int borderVerticalSize) {
+        return (x < 0 || x >= borderHorizontalSize || y < 0 || y >= borderVerticalSize);
+    }
 }
