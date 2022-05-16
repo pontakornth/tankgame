@@ -42,14 +42,17 @@ public class GameMenu extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO: add event listener here
+                backgroundProcess.changeToMapMenu(1);
             }
         });
+        // TODO: after implement tank bot, remove line below
+        onePlayerButton.setEnabled(false);
+
 
         twoPlayerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO: add event listen here, now it's a template
-                backgroundProcess.startTwoPlayerGame();
+                backgroundProcess.changeToMapMenu(2);
             }
         });
     }

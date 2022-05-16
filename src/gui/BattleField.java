@@ -13,6 +13,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 
 public class BattleField extends JPanel implements Observer<String> {
 
@@ -26,10 +27,14 @@ public class BattleField extends JPanel implements Observer<String> {
 
     private BackgroundProcess backgroundProcess;
 
-    BattleField(BackgroundProcess backgroundProcess) {
+    BattleField(BackgroundProcess backgroundProcess, int playerNumber, List<String> map) {
         this.backgroundProcess = backgroundProcess;
-
-        world = new World();
+        // TODO: update this to handle player number
+        if(map == null) {
+            world = new World();
+        } else {
+            world = new World(map, playerNumber);
+        }
         world.addObservers(this);
         imageMap = new HashMap<>();
         setFocusable(true);
