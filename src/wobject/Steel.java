@@ -2,7 +2,7 @@ package wobject;
 
 public class Steel extends WObject {
     Steel(int x, int y) {
-        super(x, y);
+        super(x, y, 1);
     }
 
     @Override
