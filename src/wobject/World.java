@@ -70,40 +70,11 @@ public class World implements Observable<String> {
         Thread thread = new Thread(() -> {
             // TODO: Add win condition.
             while (true) {
-                for (Tank tank: tanks) {
-                    if (!willCollide(tank)) {
-                            tank.update();
-                    }
-                }
                 List<Bullet> bulletsToRemove = new ArrayList<>();
                 List<WObject> tilesToRemove = new ArrayList<>();
-                for (Bullet bullet : bullets) {
-                    // TODO: Check collision against brick and tanks
-                    if (bullet.isOutsideBorder(23, 23)) {
-                        bulletPool.returnBullet(bullet);
-                        bulletsToRemove.add(bullet);
-                    }
-                    ;
-                    bullet.update();
-                }
-                for (WObject tile : tiles) {
-                    // Only check for solid tile.
-                    if (tile.isSolid()) {
-                        for (Bullet bullet : bullets) {
-                            if (tile.getX() == bullet.getX() && tile.getY() == bullet.getY()) {
-                                // Collide!
-                                boolean hit = tile.damage();
-                                if (hit) {
-                                    bulletsToRemove.add(bullet);
-                                    bulletPool.returnBullet(bullet);
-                                    if (tile.getLifePoint() == 0) {
-                                        tilesToRemove.add(tile);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                updateTankIfNoCollision();
+                removeOffScreenBullets(bulletsToRemove);
+                checkTilesAndBulletsCollision(bulletsToRemove, tilesToRemove);
                 for (Bullet indexBulletToRemove: bulletsToRemove) {
                     bullets.remove(indexBulletToRemove);
                 }
@@ -119,6 +90,47 @@ public class World implements Observable<String> {
             }
         });
         thread.start();
+    }
+
+    private void checkTilesAndBulletsCollision(List<Bullet> bulletsToRemove, List<WObject> tilesToRemove) {
+        for (WObject tile : tiles) {
+            // Only check for solid tile.
+            if (tile.isSolid()) {
+                for (Bullet bullet : bullets) {
+                    if (tile.getX() == bullet.getX() && tile.getY() == bullet.getY()) {
+                        // Collide!
+                        boolean hit = tile.damage();
+                        if (hit) {
+                            bulletsToRemove.add(bullet);
+                            bulletPool.returnBullet(bullet);
+                            if (tile.getLifePoint() == 0) {
+                                tilesToRemove.add(tile);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void removeOffScreenBullets(List<Bullet> bulletsToRemove) {
+        for (Bullet bullet : bullets) {
+            // TODO: Check collision against brick and tanks
+            if (bullet.isOutsideBorder(23, 23)) {
+                bulletPool.returnBullet(bullet);
+                bulletsToRemove.add(bullet);
+            }
+            ;
+            bullet.update();
+        }
+    }
+
+    private void updateTankIfNoCollision() {
+        for (Tank tank: tanks) {
+            if (!willCollide(tank)) {
+                    tank.update();
+            }
+        }
     }
 
     private boolean willCollide(Tank tank) {
