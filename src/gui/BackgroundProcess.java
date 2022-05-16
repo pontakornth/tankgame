@@ -42,4 +42,8 @@ public class BackgroundProcess {
         window.revalidate();
         window.repaint();
     }
+
+    public Window getWindow() {
+        return window;
+    }
 }

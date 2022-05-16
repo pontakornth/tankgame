@@ -84,14 +84,7 @@ public class OptionMenu extends JPanel{
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                // TODO: refactor this to action listener onKeyChange
                 MovementConfig key = MovementConfig.getInstance();
-//                for(Enum keyProp: keyTextFields.keySet()) {
-//                    key.updateProp((KeyProp) keyProp, KeyEvent.getExtendedKeyCodeForChar(keyTextFields.get(keyProp).getText().charAt(0)));
-//                }
-//                // save properties
-//                key.saveProp();
-//                updateKeyProp();
                 if(!keyChangeListener.isWaiting) {
                     for(Enum keyProp: keyCodes.keySet()) {
                         key.updateProp((KeyProp) keyProp, keyCodes.get(keyProp));
@@ -99,7 +92,7 @@ public class OptionMenu extends JPanel{
                     key.saveProp();
                 } else {
                     updateKeyProp();
-                    System.out.println("Error invalid key");
+                    JOptionPane.showMessageDialog(backgroundProcess.getWindow(), "Please specify your new keys again");
                 }
             }
         });
@@ -142,11 +135,6 @@ public class OptionMenu extends JPanel{
             setEditable(false);
             ((AbstractDocument) getDocument()).setDocumentFilter(new UppercaseDocumentFilter());
         }
-
-        KeyTextField(String text) {
-            this();
-            setText(text);
-        }
     }
 
     private class KeyChangeListener extends KeyAdapter {
@@ -156,10 +144,7 @@ public class OptionMenu extends JPanel{
         @Override
         public void keyPressed(KeyEvent e) {
             super.keyPressed(e);
-            System.out.println(e.getKeyCode() + " " + KeyEvent.getKeyText(e.getKeyCode()));
-
             int inputCode = e.getKeyCode();
-
             if(!isWaiting) {
                 for (Enum keyProp: keyCodes.keySet()) {
                     if(keyCodes.get(keyProp) == inputCode) {
@@ -182,7 +167,7 @@ public class OptionMenu extends JPanel{
                     keyCodes.put(currentKeyProp, inputCode);
                     keyTextFields.get(currentKeyProp).setText(KeyEvent.getKeyText(inputCode));
                 } else {
-                    keyTextFields.get(currentKeyProp).setText("KEY EXIST");
+                    keyTextFields.get(currentKeyProp).setText("TRY AGAIN, KEY EXISTED");
             }}
         }
 
