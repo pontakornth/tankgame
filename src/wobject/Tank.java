@@ -9,13 +9,31 @@ public class Tank extends WObject implements Movable{
        super(x, y, lifePoint);
        // TODO: Add information about side.
        directionImageFileName = new HashMap<>();
+       direction = Direction.North;
        directionImageFileName.put(Direction.North, "./img/blue-tank-front.png");
        directionImageFileName.put(Direction.South, "./img/blue-tank-back.png");
        directionImageFileName.put(Direction.East, "./img/blue-tank-right.png");
        directionImageFileName.put(Direction.West, "./img/blue-tank-left.png");
     }
+
+    public Tank(int x, int y, int lifePoint, Faction faction) {
+        super(x,y);
+        this.lifePoint = lifePoint;
+        directionImageFileName = new HashMap<>();
+        direction = Direction.North;
+        directionImageFileName.put(Direction.North, getFileName(faction, "front"));
+        directionImageFileName.put(Direction.South, getFileName(faction, "back"));
+        directionImageFileName.put(Direction.East, getFileName(faction, "right"));
+        directionImageFileName.put(Direction.West, getFileName(faction, "left"));
+
+    }
+
+    private static String getFileName(Faction faction, String direction) {
+        return String.format("./img/%s-tank-%s.png", faction, direction);
+    }
     private Direction direction;
     private Map<Direction, String> directionImageFileName;
+
 
     public void fire() {
         // TODO: implement bullet fire method here

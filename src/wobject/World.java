@@ -45,10 +45,11 @@ public class World implements Observable<String> {
                 char c = map.get(i).charAt(j);
                 switch (c) {
                     case '1':
-                        tanks.add(new Tank(j, i, 1));
+                        tanks.add(new Tank(j, i, 1, Faction.Blue));
                         break;
                     case '2':
-                        tanks.add(new Tank(j, i, 2));
+                        // TODO: Handle case for singleplayer.
+                        tanks.add(new Tank(j, i, 2, Faction.Red));
                         break;
                     case 'B':
                         tiles.add(new Brick(j, i));
