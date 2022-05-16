@@ -12,25 +12,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.security.Key;
+import java.util.HashMap;
 
 import config.MovementConfig.KeyProp;
 
 public class OptionMenu extends JPanel{
 
     private BackgroundProcess backgroundProcess;
-    private KeyTextField oneUp;
-    private KeyTextField oneDown;
-    private KeyTextField oneLeft;
-    private KeyTextField oneRight;
-    private KeyTextField oneFire;
-    private KeyTextField twoUp;
-    private KeyTextField twoDown;
-    private KeyTextField twoLeft;
-    private KeyTextField twoRight;
-    private KeyTextField twoFire;
     private JButton saveButton;
     private JButton backButton;
+
+    private HashMap<Enum, KeyTextField> keyTextFields;
 
     OptionMenu(BackgroundProcess backgroundProcess) {
         this.backgroundProcess = backgroundProcess;
@@ -38,84 +30,54 @@ public class OptionMenu extends JPanel{
         initMenu();
 
         setLayout(null);
-        add(oneUp);
-        add(twoUp);
-        add(oneDown);
-        add(twoDown);
-        add(oneLeft);
-        add(twoLeft);
-        add(oneRight);
-        add(twoRight);
-        add(oneFire);
-        add(twoFire);
         add(saveButton);
         add(backButton);
+        for(Enum key: keyTextFields.keySet()) {
+            add(keyTextFields.get(key));
+        }
 
         // TODO: config dynamic panel size
         setPreferredSize(new Dimension(690, 690));
     }
 
     public void updateKeyProp() {
+        // re-read config file to get latest saved update
         MovementConfig key = MovementConfig.getInstance();
-        // player one
-        oneUp.setText(key.getKeyText(KeyProp.ONE_UP));
-        oneDown.setText(key.getKeyText(KeyProp.ONE_DOWN));
-        oneLeft.setText(key.getKeyText(KeyProp.ONE_LEFT));
-        oneRight.setText(key.getKeyText(KeyProp.ONE_RIGHT));
-        oneFire.setText(key.getKeyText(KeyProp.ONE_FIRE));
-        // player two
-        twoUp.setText(key.getKeyText(KeyProp.TWO_UP));
-        twoDown.setText(key.getKeyText(KeyProp.TWO_DOWN));
-        twoLeft.setText(key.getKeyText(KeyProp.TWO_LEFT));
-        twoRight.setText(key.getKeyText(KeyProp.TWO_RIGHT));
-        twoFire.setText(key.getKeyText(KeyProp.TWO_FIRE));
+        for(Enum keyProp: keyTextFields.keySet()) {
+            keyTextFields.get(keyProp).setText(key.getKeyText((KeyProp) keyProp));
+        }
     }
 
     private void initMenu() {
         Dimension buttonSize = new Dimension(201, 51);
         Dimension textFieldSize = new Dimension(100, 30);
 
-        // player 1 setting
-        oneUp = new KeyTextField();
-        oneUp.setBounds(214, 188, textFieldSize.width, textFieldSize.height);
-        oneDown = new KeyTextField();
-        oneDown.setBounds(214, 260, textFieldSize.width, textFieldSize.height);
-        oneLeft = new KeyTextField();
-        oneLeft.setBounds(214, 332, textFieldSize.width, textFieldSize.height);
-        oneRight = new KeyTextField();
-        oneRight.setBounds(214, 404, textFieldSize.width, textFieldSize.height);
-        oneFire = new KeyTextField();
-        oneFire.setBounds(214, 476, textFieldSize.width, textFieldSize.height);
-        // player 2 setting
-        twoUp = new KeyTextField();
-        twoUp.setBounds(563, 188, textFieldSize.width, textFieldSize.height);
-        twoDown = new KeyTextField();
-        twoDown.setBounds(563, 260, textFieldSize.width, textFieldSize.height);
-        twoLeft = new KeyTextField();
-        twoLeft.setBounds(563, 332, textFieldSize.width, textFieldSize.height);
-        twoRight = new KeyTextField();
-        twoRight.setBounds(563, 404, textFieldSize.width, textFieldSize.height);
-        twoFire = new KeyTextField();
-        twoFire.setBounds(563, 476, textFieldSize.width, textFieldSize.height);
+        keyTextFields = new HashMap<>();
+        for(KeyProp keyProp: KeyProp.values()) {
+            keyTextFields.put(keyProp, new KeyTextField());
+        }
+        // set layout
+        keyTextFields.get(KeyProp.ONE_UP).setBounds(214, 188, textFieldSize.width, textFieldSize.height);
+        keyTextFields.get(KeyProp.ONE_DOWN).setBounds(214, 260, textFieldSize.width, textFieldSize.height);
+        keyTextFields.get(KeyProp.ONE_LEFT).setBounds(214, 332, textFieldSize.width, textFieldSize.height);
+        keyTextFields.get(KeyProp.ONE_RIGHT).setBounds(214, 404, textFieldSize.width, textFieldSize.height);
+        keyTextFields.get(KeyProp.ONE_FIRE).setBounds(214, 476, textFieldSize.width, textFieldSize.height);
+        keyTextFields.get(KeyProp.TWO_UP).setBounds(563, 188, textFieldSize.width, textFieldSize.height);
+        keyTextFields.get(KeyProp.TWO_DOWN).setBounds(563, 260, textFieldSize.width, textFieldSize.height);
+        keyTextFields.get(KeyProp.TWO_LEFT).setBounds(563, 332, textFieldSize.width, textFieldSize.height);
+        keyTextFields.get(KeyProp.TWO_RIGHT).setBounds(563, 404, textFieldSize.width, textFieldSize.height);
+        keyTextFields.get(KeyProp.TWO_FIRE).setBounds(563, 476, textFieldSize.width, textFieldSize.height);
         // save button
         saveButton = new JButton("Save");
         saveButton.setBounds(124, 584, buttonSize.width, buttonSize.height);
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                // TODO: refactor this to action listener onKeyChange
                 MovementConfig key = MovementConfig.getInstance();
-                // player one
-                key.updateProp(KeyProp.ONE_UP, KeyEvent.getExtendedKeyCodeForChar(oneUp.getText().charAt(0)));
-                key.updateProp(KeyProp.ONE_DOWN, KeyEvent.getExtendedKeyCodeForChar(oneDown.getText().charAt(0)));
-                key.updateProp(KeyProp.ONE_LEFT, KeyEvent.getExtendedKeyCodeForChar(oneLeft.getText().charAt(0)));
-                key.updateProp(KeyProp.ONE_RIGHT, KeyEvent.getExtendedKeyCodeForChar(oneRight.getText().charAt(0)));
-                key.updateProp(KeyProp.ONE_FIRE, KeyEvent.getExtendedKeyCodeForChar(oneFire.getText().charAt(0)));
-                // player two
-                key.updateProp(KeyProp.TWO_UP, KeyEvent.getExtendedKeyCodeForChar(twoUp.getText().charAt(0)));
-                key.updateProp(KeyProp.TWO_DOWN, KeyEvent.getExtendedKeyCodeForChar(twoDown.getText().charAt(0)));
-                key.updateProp(KeyProp.TWO_LEFT, KeyEvent.getExtendedKeyCodeForChar(twoLeft.getText().charAt(0)));
-                key.updateProp(KeyProp.TWO_RIGHT, KeyEvent.getExtendedKeyCodeForChar(twoRight.getText().charAt(0)));
-                key.updateProp(KeyProp.TWO_FIRE, KeyEvent.getExtendedKeyCodeForChar(twoFire.getText().charAt(0)));
+                for(Enum keyProp: keyTextFields.keySet()) {
+                    key.updateProp((KeyProp) keyProp, KeyEvent.getExtendedKeyCodeForChar(keyTextFields.get(keyProp).getText().charAt(0)));
+                }
                 // save properties
                 key.saveProp();
             }
