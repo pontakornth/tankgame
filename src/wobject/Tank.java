@@ -6,14 +6,7 @@ import java.util.Map;
 public class Tank extends WObject implements Movable{
 
     public Tank(int x, int y, int lifePoint) {
-       super(x, y, lifePoint);
-       // TODO: Add information about side.
-       directionImageFileName = new HashMap<>();
-       direction = Direction.North;
-       directionImageFileName.put(Direction.North, "./img/blue-tank-front.png");
-       directionImageFileName.put(Direction.South, "./img/blue-tank-back.png");
-       directionImageFileName.put(Direction.East, "./img/blue-tank-right.png");
-       directionImageFileName.put(Direction.West, "./img/blue-tank-left.png");
+       this(x, y, lifePoint, Faction.Blue);
     }
 
     public Tank(int x, int y, int lifePoint, Faction faction) {
