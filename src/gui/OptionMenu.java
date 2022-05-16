@@ -23,6 +23,7 @@ public class OptionMenu extends JPanel{
     private JButton backButton;
 
     private HashMap<Enum, KeyTextField> keyTextFields;
+    private HashMap<Enum, Integer> keyCodes;
 
     OptionMenu(BackgroundProcess backgroundProcess) {
         this.backgroundProcess = backgroundProcess;
@@ -35,6 +36,7 @@ public class OptionMenu extends JPanel{
         for(Enum key: keyTextFields.keySet()) {
             add(keyTextFields.get(key));
         }
+        addKeyListener(new KeyChangeListener());
 
         // TODO: config dynamic panel size
         setPreferredSize(new Dimension(690, 690));
@@ -45,6 +47,7 @@ public class OptionMenu extends JPanel{
         MovementConfig key = MovementConfig.getInstance();
         for(Enum keyProp: keyTextFields.keySet()) {
             keyTextFields.get(keyProp).setText(key.getKeyText((KeyProp) keyProp));
+            keyCodes.put(keyProp, key.getKeyCode((KeyProp) keyProp));
         }
     }
 
@@ -53,6 +56,7 @@ public class OptionMenu extends JPanel{
         Dimension textFieldSize = new Dimension(100, 30);
 
         keyTextFields = new HashMap<>();
+        keyCodes = new HashMap<>();
         for(KeyProp keyProp: KeyProp.values()) {
             keyTextFields.put(keyProp, new KeyTextField());
         }
@@ -117,20 +121,51 @@ public class OptionMenu extends JPanel{
 
     public class KeyTextField extends JTextField {
         KeyTextField() {
-            addKeyListener(new KeyAdapter() {
-                @Override
-                public void keyTyped(KeyEvent e) {
-                    if(getText().length() >= 1) {
-                        e.consume();
-                    }
-                }
-            });
+            setEditable(false);
             ((AbstractDocument) getDocument()).setDocumentFilter(new UppercaseDocumentFilter());
         }
 
         KeyTextField(String text) {
             this();
             setText(text);
+        }
+    }
+
+    private class KeyChangeListener extends KeyAdapter {
+        private boolean isWaiting = false;
+        private KeyProp currentKeyProp;
+
+        @Override
+        public void keyPressed(KeyEvent e) {
+            super.keyPressed(e);
+            System.out.println(e.getKeyCode() + " " + KeyEvent.getKeyText(e.getKeyCode()));
+
+            int inputCode = e.getKeyCode();
+
+            if(!isWaiting) {
+                for (Enum keyProp: keyCodes.keySet()) {
+                    if(keyCodes.get(keyProp) == inputCode) {
+                        isWaiting = true;
+                        currentKeyProp = (KeyProp) keyProp;
+                        keyTextFields.get(currentKeyProp).setText("PRESS ANY KEY");
+                        break;
+                    }
+                }
+            } else {
+                boolean isSame = false;
+                for (Enum keyProp : keyCodes.keySet()) {
+                    if (keyCodes.get(keyProp) == inputCode && (KeyProp) keyProp != currentKeyProp) {
+                        isSame = true;
+                        break;
+                    }
+                }
+                if (!isSame) {
+                    isWaiting = false;
+                    keyCodes.put(currentKeyProp, inputCode);
+                    keyTextFields.get(currentKeyProp).setText(KeyEvent.getKeyText(inputCode));
+                } else {
+                    keyTextFields.get(currentKeyProp).setText("KEY EXIST");
+            }}
         }
     }
 }
