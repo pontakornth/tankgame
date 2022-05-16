@@ -74,18 +74,40 @@ public class World implements Observable<String> {
                             tank.update();
                     }
                 }
-                List<Integer> indexBulletsToRemove = new ArrayList<>();
-                for (int i = 0; i < bullets.size(); i++) {
+                List<Bullet> bulletsToRemove = new ArrayList<>();
+                List<WObject> tilesToRemove = new ArrayList<>();
+                for (Bullet bullet : bullets) {
                     // TODO: Check collision against brick and tanks
-                    Bullet bullet  = bullets.get(i);
                     if (bullet.isOutsideBorder(23, 23)) {
                         bulletPool.returnBullet(bullet);
-                        indexBulletsToRemove.add(i);
-                    };
+                        bulletsToRemove.add(bullet);
+                    }
+                    ;
                     bullet.update();
                 }
-                for (int indexBulletToRemove: indexBulletsToRemove) {
+                for (WObject tile : tiles) {
+                    // Only check for solid tile.
+                    if (tile.isSolid()) {
+                        for (Bullet bullet : bullets) {
+                            if (tile.getX() == bullet.getX() && tile.getY() == bullet.getY()) {
+                                // Collide!
+                                boolean hit = tile.damage();
+                                if (hit) {
+                                    bulletsToRemove.add(bullet);
+                                    bulletPool.returnBullet(bullet);
+                                    if (tile.getLifePoint() == 0) {
+                                        tilesToRemove.add(tile);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                for (Bullet indexBulletToRemove: bulletsToRemove) {
                     bullets.remove(indexBulletToRemove);
+                }
+                for (WObject tileToRemove: tilesToRemove) {
+                    tiles.remove(tileToRemove);
                 }
                 notifyObservers("UPDATE");
                 try {

@@ -14,4 +14,9 @@ public class Steel extends WObject {
     public String getSpriteFileName() {
         return "./img/metal.png";
     }
+
+    @Override
+    public boolean damage() {
+        return true;
+    }
 }
