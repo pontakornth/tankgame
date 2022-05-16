@@ -1,5 +1,6 @@
 package gui;
 
+import config.MovementConfig;
 import util.Observable;
 import util.Observer;
 import wobject.Direction;
@@ -55,25 +56,26 @@ public class BattleField extends JPanel implements Observer<String> {
         }
         @Override
         public void keyPressed(KeyEvent e) {
+            MovementConfig movementConfig = MovementConfig.getInstance();
             int keyCode = e.getKeyCode();
             // TODO: Handle second tank and stopping.
-            if (keyCode == KeyEvent.VK_UP) {
+            if (keyCode == movementConfig.getKeyCode("ONE_UP")) {
                 battleField.moveTank(0, Direction.North);
-            } else if (keyCode == KeyEvent.VK_DOWN) {
+            } else if (keyCode == movementConfig.getKeyCode("ONE_DOWN")) {
                 battleField.moveTank(0, Direction.South);
-            } else if (keyCode == KeyEvent.VK_LEFT) {
+            } else if (keyCode == movementConfig.getKeyCode("ONE_LEFT")) {
                 battleField.moveTank(0, Direction.West);
-            } else if (keyCode == KeyEvent.VK_RIGHT) {
+            } else if (keyCode == movementConfig.getKeyCode("ONE_RIGHT")) {
                 battleField.moveTank(0, Direction.East);
             }
 
-            if (keyCode == KeyEvent.VK_W) {
+            if (keyCode == movementConfig.getKeyCode("TWO_UP")) {
                 battleField.moveTank(1, Direction.North);
-            } else if (keyCode == KeyEvent.VK_S) {
+            } else if (keyCode == movementConfig.getKeyCode("TWO_DOWN")) {
                 battleField.moveTank(1, Direction.South);
-            } else if (keyCode == KeyEvent.VK_A) {
+            } else if (keyCode == movementConfig.getKeyCode("TWO_LEFT")) {
                 battleField.moveTank(1, Direction.West);
-            } else if (keyCode == KeyEvent.VK_D) {
+            } else if (keyCode == movementConfig.getKeyCode("TWO_RIGHT")) {
                 battleField.moveTank(1, Direction.East);
             }
         }
@@ -81,8 +83,20 @@ public class BattleField extends JPanel implements Observer<String> {
         @Override
         public void keyReleased(KeyEvent e) {
             // TODO: Receive array of keys from config instead
-            int[] player1 = new int[]{KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT};
-            int[] player2 = new int[]{KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D};
+            MovementConfig movementConfig = MovementConfig.getInstance();
+            int[] player1 = new int[]{
+                    movementConfig.getKeyCode("ONE_UP"),
+                    movementConfig.getKeyCode("ONE_DOWN"),
+                    movementConfig.getKeyCode("ONE_LEFT"),
+                    movementConfig.getKeyCode("ONE_RIGHT")
+            };
+            int[] player2 = new int[]{
+                    movementConfig.getKeyCode("TWO_UP"),
+                    movementConfig.getKeyCode("TWO_DOWN"),
+                    movementConfig.getKeyCode("TWO_LEFT"),
+                    movementConfig.getKeyCode("TWO_RIGHT"),
+
+            };
             for (int key: player1) {
                 if (key == e.getKeyCode()) {
                     battleField.stopTank(0);
