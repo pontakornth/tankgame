@@ -25,6 +25,8 @@ public class OptionMenu extends JPanel{
     private HashMap<Enum, KeyTextField> keyTextFields;
     private HashMap<Enum, Integer> keyCodes;
 
+    private KeyChangeListener keyChangeListener;
+
     OptionMenu(BackgroundProcess backgroundProcess) {
         this.backgroundProcess = backgroundProcess;
 
@@ -36,7 +38,8 @@ public class OptionMenu extends JPanel{
         for(Enum key: keyTextFields.keySet()) {
             add(keyTextFields.get(key));
         }
-        addKeyListener(new KeyChangeListener());
+        keyChangeListener = new KeyChangeListener();
+        addKeyListener(keyChangeListener);
 
         // TODO: config dynamic panel size
         setPreferredSize(new Dimension(690, 690));
@@ -48,6 +51,10 @@ public class OptionMenu extends JPanel{
         for(Enum keyProp: keyTextFields.keySet()) {
             keyTextFields.get(keyProp).setText(key.getKeyText((KeyProp) keyProp));
             keyCodes.put(keyProp, key.getKeyCode((KeyProp) keyProp));
+        }
+        // reset state of key listener
+        if(keyChangeListener != null) {
+            keyChangeListener.reset();
         }
     }
 
@@ -77,15 +84,26 @@ public class OptionMenu extends JPanel{
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO: refactor this to action listener onKeyChange
+//                // TODO: refactor this to action listener onKeyChange
                 MovementConfig key = MovementConfig.getInstance();
-                for(Enum keyProp: keyTextFields.keySet()) {
-                    key.updateProp((KeyProp) keyProp, KeyEvent.getExtendedKeyCodeForChar(keyTextFields.get(keyProp).getText().charAt(0)));
+//                for(Enum keyProp: keyTextFields.keySet()) {
+//                    key.updateProp((KeyProp) keyProp, KeyEvent.getExtendedKeyCodeForChar(keyTextFields.get(keyProp).getText().charAt(0)));
+//                }
+//                // save properties
+//                key.saveProp();
+//                updateKeyProp();
+                if(!keyChangeListener.isWaiting) {
+                    for(Enum keyProp: keyCodes.keySet()) {
+                        key.updateProp((KeyProp) keyProp, keyCodes.get(keyProp));
+                    }
+                    key.saveProp();
+                } else {
+                    updateKeyProp();
+                    System.out.println("Error invalid key");
                 }
-                // save properties
-                key.saveProp();
             }
         });
+        saveButton.setFocusable(false); // solving losing focus issue
         // back button
         backButton = new JButton("Return to Menu");
         backButton.setBounds(364, 584, buttonSize.width, buttonSize.height);
@@ -166,6 +184,10 @@ public class OptionMenu extends JPanel{
                 } else {
                     keyTextFields.get(currentKeyProp).setText("KEY EXIST");
             }}
+        }
+
+        private void reset() {
+            isWaiting = false;
         }
     }
 }
