@@ -192,15 +192,16 @@ public class World implements Observable<String> {
             int tankY = tank.getY();
             Bullet bullet;
             Direction direction = tank.getDirection();
+            Faction faction = tank.getFaction();
             if (direction == Direction.North) {
-                bullet = bulletPool.requestBullet(tankX, tankY, 0, -1);
+                bullet = bulletPool.requestBullet(tankX, tankY, 0, -1, faction);
             } else if (direction == Direction.South) {
-                bullet = bulletPool.requestBullet(tankX, tankY, 0, 1);
+                bullet = bulletPool.requestBullet(tankX, tankY, 0, 1, faction);
             } else if (direction == Direction.East) {
-                bullet = bulletPool.requestBullet(tankX, tankY, 1, 0);
+                bullet = bulletPool.requestBullet(tankX, tankY, 1, 0, faction);
             } else {
                 // West is the only direction left.
-                bullet = bulletPool.requestBullet(tankX, tankY, -1, 0);
+                bullet = bulletPool.requestBullet(tankX, tankY, -1, 0, faction);
             }
             bullets.add(bullet);
         }
