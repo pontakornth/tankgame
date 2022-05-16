@@ -1,5 +1,7 @@
 package gui;
 
+import config.MapReader;
+
 import javax.swing.*;
 
 public class Window extends JFrame {
@@ -14,6 +16,7 @@ public class Window extends JFrame {
     private BackgroundProcess backgroundProcess;
     private GameMenu gameMenu;
     private OptionMenu optionMenu;
+    private MapMenu mapMenu;
 
     Window() {
         super();
@@ -34,7 +37,6 @@ public class Window extends JFrame {
         backgroundProcess = new BackgroundProcess(this);
         gameMenu = new GameMenu(backgroundProcess);
         optionMenu = new OptionMenu(backgroundProcess);
-        battleField = new BattleField(backgroundProcess);
     }
 
     public BattleField getBattleField() {
@@ -49,8 +51,16 @@ public class Window extends JFrame {
         return optionMenu;
     }
 
+    public MapMenu getMapMenu() {
+        return mapMenu;
+    }
+
     public void setBattleField(BattleField battleField) {
         this.battleField = battleField;
+    }
+
+    public void setMapMenu(MapMenu mapMenu) {
+        this.mapMenu = mapMenu;
     }
 
     public static void main(String[] args) {
