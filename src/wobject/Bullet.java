@@ -59,4 +59,11 @@ public class Bullet extends WObject implements Movable {
     public String getSpriteFileName() {
         return null;
     }
+
+    public void refreshState(int x, int y, int dx, int dy) {
+        this.x = x;
+        this.y = y;
+        this.dx = dx;
+        this.dy = dy;
+    }
 }

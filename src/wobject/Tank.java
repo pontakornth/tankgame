@@ -73,5 +73,9 @@ public class Tank extends WObject implements Movable{
     public int getDy() {
         return dy;
     }
+
+    public Direction getDirection() {
+        return direction;
+    }
     // TODO: Add functionality to tank.
 }

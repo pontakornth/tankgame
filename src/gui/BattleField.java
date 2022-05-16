@@ -72,6 +72,8 @@ public class BattleField extends JPanel implements Observer<String> {
                 battleField.moveTank(0, Direction.West);
             } else if (keyCode == movementConfig.getKeyCode("ONE_RIGHT")) {
                 battleField.moveTank(0, Direction.East);
+            } else if (keyCode == movementConfig.getKeyCode("ONE_FIRE")) {
+                battleField.fireBullet(0);
             }
 
             if (keyCode == movementConfig.getKeyCode("TWO_UP")) {
@@ -82,6 +84,8 @@ public class BattleField extends JPanel implements Observer<String> {
                 battleField.moveTank(1, Direction.West);
             } else if (keyCode == movementConfig.getKeyCode("TWO_RIGHT")) {
                 battleField.moveTank(1, Direction.East);
+            } else if (keyCode == movementConfig.getKeyCode("TWO_FIRE")) {
+                battleField.fireBullet(1);
             }
         }
 
@@ -126,6 +130,10 @@ public class BattleField extends JPanel implements Observer<String> {
         }
     }
 
+    private void fireBullet(int tankIndex) {
+        world.fireBullet(tankIndex);
+    }
+
     private void stopTank(int tankIndex) {
         world.stopTank(tankIndex);
     }
@@ -140,8 +148,20 @@ public class BattleField extends JPanel implements Observer<String> {
         super.paint(g);
         paintGrid(g);
         paintTanks(g);
+        paintBullets(g);
         // So tiles can overwrite tanks
         paintTiles(g);
+    }
+
+    private void paintBullets(Graphics g) {
+        for (WObject bullet: world.getBullets()) {
+            g.setColor(Color.red);
+
+            int x = bullet.getX() * GRID_PIXEL + (int) (GRID_PIXEL / 3);
+            int y = bullet.getY() * GRID_PIXEL + (int) (GRID_PIXEL / 3);
+
+            g.fillRect(x, y, (int) (GRID_PIXEL /3) ,(int) (GRID_PIXEL/3));
+        }
     }
 
     public void paintGrid(Graphics g) {
