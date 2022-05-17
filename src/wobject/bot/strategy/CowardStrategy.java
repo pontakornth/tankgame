@@ -10,27 +10,28 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
-import static java.lang.Math.PI;
-import static java.lang.Math.min;
 import static util.DistanceCalculator.manhattanDist;
 import static wobject.command.CommandFactory.CommandEnum.*;
 import static wobject.command.CommandFactory.getMoveCommand;
-import static wobject.command.CommandFactory.getRandomMove;
+import static wobject.bot.strategy.StrategyUtils.*;
 
 public class CowardStrategy extends Strategy {
 
+    private StrategyUtils strategyUtils;
+
     public CowardStrategy(World world, int botNumber) {
         super(world, botNumber);
+        strategyUtils = new StrategyUtils(world, botNumber);
     }
 
     @Override
     public GameCommand getNextMove() {
         Bullet bullet = null;
-        Tank botTank = getBotTank();
+        Tank botTank = strategyUtils.getBotTank();
         DirUtils dirUtils = new DirUtils();
         // load closest bullet
         try {
-            bullet = getIncomingBullet().get(0);
+            bullet = strategyUtils.getIncomingBullet().get(0);
             Direction direction = bullet.getDirection();
         } catch (Exception e) {
 
@@ -62,83 +63,14 @@ public class CowardStrategy extends Strategy {
         }
 
         // hiding in trees
-        WObject trees = getClosestObject();
+        WObject trees = strategyUtils.getClosestObject();
         if (trees != null && trees instanceof Trees) {
-            if (bullet != null && !isSameSpot(new Bullet(bullet.getX()+bullet.getDx(), bullet.getY()+bullet.getDy()), trees)) {
-                return moveToObject(trees);
+            if (bullet != null && !strategyUtils.isSameSpot(new Bullet(bullet.getX()+bullet.getDx(), bullet.getY()+bullet.getDy()), trees)) {
+                return strategyUtils.moveToObject(trees);
             }
         }
 
         // base command
         return getMoveCommand(world, botNumber, MoveStop);
-    }
-
-    private List<Bullet> getIncomingBullet() {
-        // get all incoming bullets or bullets moving closer to tank
-        Tank botTank = getBotTank();
-        List<Bullet> incomingBullets = new ArrayList<Bullet>();
-        for (Bullet bullet : world.getBullets()) {
-            if (isBulletCloser(botTank, bullet)) {
-                incomingBullets.add(bullet);
-            }
-        }
-        incomingBullets.sort(new Comparator<Bullet>() {
-            @Override
-            public int compare(Bullet o1, Bullet o2) {
-                return manhattanDist(o1, o2);
-            }
-        });
-        return incomingBullets;
-    }
-
-    private WObject getClosestObject() {
-        List<WObject> objects = world.getTiles();
-        if (objects.size() == 0) {
-            return null;
-        }
-        objects.sort(new Comparator<WObject>() {
-            @Override
-            public int compare(WObject o1, WObject o2) {
-                return manhattanDist(getBotTank(), o1) - manhattanDist(getBotTank(), o2);
-            }
-        });
-        return objects.get(0);
-    }
-
-    private GameCommand moveToObject(WObject object) {
-        Tank botTank = getBotTank();
-        if(isSameSpot(botTank, object)) {
-            return getMoveCommand(world, botNumber, MoveStop);
-        }
-
-        HashMap<CommandFactory.CommandEnum, Integer> commandMap = new HashMap<>();
-        commandMap.put(MoveNorth, manhattanDist(object.getX(), object.getY(), botTank.getX(), botTank.getY()-1));
-        commandMap.put(MoveSouth, manhattanDist(object.getX(), object.getY(), botTank.getX(), botTank.getY()+1));
-        commandMap.put(MoveEast, manhattanDist(object.getX(), object.getY(), botTank.getX()+1, botTank.getY()));
-        commandMap.put(MoveWest, manhattanDist(object.getX(), object.getY(), botTank.getX()-1, botTank.getY()));
-
-        int localMin = 999999;
-        CommandFactory.CommandEnum commandEnum = null;
-        for(CommandFactory.CommandEnum c: commandMap.keySet()) {
-            if (localMin > commandMap.get(c)) {
-                localMin = commandMap.get(c);
-                commandEnum = c;
-            }
-        }
-        return getMoveCommand(world, botNumber, commandEnum);
-    }
-
-    private boolean isBulletCloser(Tank botTank, Bullet bullet) {
-        int currentDist = manhattanDist(botTank.getX(), botTank.getY(), bullet.getX(), bullet.getY());
-        int nextDist = manhattanDist(botTank.getX(), botTank.getY(), bullet.getX() + bullet.getDx(), bullet.getY() + bullet.getDy());
-        return nextDist <= currentDist;
-    }
-
-    private boolean isSameSpot(WObject o1, WObject o2) {
-        return o1.getX() == o2.getX() && o1.getY() == o2.getY();
-    }
-
-    private Tank getBotTank() {
-        return world.getTanks().get(botNumber);
     }
 }
