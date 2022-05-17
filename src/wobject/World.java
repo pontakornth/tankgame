@@ -72,11 +72,23 @@ public class World implements Observable<String> {
             while (true) {
                 List<Bullet> bulletsToRemove = new ArrayList<>();
                 List<WObject> tilesToRemove = new ArrayList<>();
+//                List<Tank> tanksToRemove = new ArrayList<>();
                 updateTankIfNoCollision();
                 removeOffScreenBullets(bulletsToRemove);
                 checkTilesAndBulletsCollision(bulletsToRemove, tilesToRemove);
-                for (Bullet indexBulletToRemove: bulletsToRemove) {
-                    bullets.remove(indexBulletToRemove);
+                handleBulletsAndBulletsCollision(bulletsToRemove);
+                handleBulletsAndTanksCollision(bulletsToRemove);
+//                for (Tank tank: tanks) {
+//                    if (tank.getLifePoint() == 0) {
+//                        tanksToRemove.add(tank);
+//                    }
+//                }
+//                for (Tank tank: tanksToRemove) {
+//                    tanks.remove(tank);
+//                }
+                for (Bullet bulletToRemove: bulletsToRemove) {
+                    bulletPool.returnBullet(bulletToRemove);
+                    bullets.remove(bulletToRemove);
                 }
                 for (WObject tileToRemove: tilesToRemove) {
                     tiles.remove(tileToRemove);
@@ -92,17 +104,42 @@ public class World implements Observable<String> {
         thread.start();
     }
 
+    private void handleBulletsAndTanksCollision(List<Bullet> bulletsToRemove) {
+        for (Bullet bullet: bullets) {
+            for (Tank tank: tanks) {
+                if (bullet.hit(tank) && !bullet.sameFaction(tank)) {
+                    // Bullet hit different
+                    tank.damage();
+                    bulletsToRemove.add(bullet);
+                }
+            }
+        }
+    }
+
+    private void handleBulletsAndBulletsCollision(List<Bullet> bulletsToRemove) {
+        // Bullet-bullet collision.
+        for (int i = 0; i < bullets.size(); i++) {
+            Bullet firstBullet = bullets.get(i);
+            for (int j = i + 1; j < bullets.size(); j++) {
+                Bullet secondBullet = bullets.get(j);
+                if (firstBullet.hit(secondBullet) && !firstBullet.sameFaction(secondBullet)) {
+                    bulletsToRemove.add(firstBullet);
+                    bulletsToRemove.add(secondBullet);
+                }
+            }
+        }
+    }
+
     private void checkTilesAndBulletsCollision(List<Bullet> bulletsToRemove, List<WObject> tilesToRemove) {
         for (WObject tile : tiles) {
             // Only check for solid tile.
             if (tile.isSolid()) {
                 for (Bullet bullet : bullets) {
-                    if (tile.getX() == bullet.getX() && tile.getY() == bullet.getY()) {
+                    if (tile.hit(bullet)) {
                         // Collide!
                         boolean hit = tile.damage();
                         if (hit) {
                             bulletsToRemove.add(bullet);
-                            bulletPool.returnBullet(bullet);
                             if (tile.getLifePoint() == 0) {
                                 tilesToRemove.add(tile);
                             }
@@ -117,7 +154,6 @@ public class World implements Observable<String> {
         for (Bullet bullet : bullets) {
             // TODO: Check collision against brick and tanks
             if (bullet.isOutsideBorder(23, 23)) {
-                bulletPool.returnBullet(bullet);
                 bulletsToRemove.add(bullet);
             }
             ;
@@ -136,15 +172,14 @@ public class World implements Observable<String> {
     private boolean willCollide(Tank tank) {
         int newX = tank.getX() + tank.getDx();
         int newY = tank.getY() + tank.getDy();
-        // TODO: Handle tank collision
-        // TODO: Replace 23 with world size
-//        int index = newY*23 + newX;
-//        if (index < 0 || index >= tiles.size())
-//            return false;
-//        WObject tile = tiles.get(index);
-//        return tile.isSolid();
         if(newX < 0 || newX >= 23 || newY < 0 || newY >= 23) {
             return true;
+        }
+        for (Tank otherTank: tanks) {
+            if (otherTank != tank) {
+                if (newX == otherTank.getX() && newY == otherTank.getY())
+                    return true;
+            }
         }
         for(WObject t: tiles) {
             if(t.getX() == newX && t.getY() == newY) {
