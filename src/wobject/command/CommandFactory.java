@@ -3,6 +3,10 @@ package wobject.command;
 import wobject.Direction;
 import wobject.World;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Random;
+
 import static wobject.Direction.*;
 
 public class CommandFactory {
@@ -14,6 +18,10 @@ public class CommandFactory {
         MoveWest,
         MoveStop,
         MoveFire;
+
+        public static CommandEnum randomCommand() {
+            return Arrays.asList(values()).get(new Random().nextInt(values().length));
+        }
     }
 
     public static GameCommand getMoveCommand(World world, int playerNumber, CommandEnum commandEnum) {
@@ -32,5 +40,9 @@ public class CommandFactory {
                 return new MoveStop(world, playerNumber);
         }
         return null;
+    }
+
+    public static GameCommand getRandomMove(World world, int playerNumber) {
+        return getMoveCommand(world, playerNumber, CommandEnum.randomCommand());
     }
 }

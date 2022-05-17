@@ -8,6 +8,7 @@ import util.DirUtils;
 import static util.DistanceCalculator.manhattanDist;
 
 import wobject.bot.strategy.CowardStrategy;
+import wobject.bot.strategy.IdiotStrategy;
 import wobject.bot.strategy.Strategy;
 import wobject.command.GameCommand;
 import static wobject.command.CommandFactory.CommandEnum.*;
@@ -22,7 +23,7 @@ public class BotPlayer {
     BotPlayer(World world, int botNumber) {
         this.world = world;
         this.botNumber = botNumber;
-        this.strategy = new CowardStrategy(world, botNumber);
+        this.strategy = new IdiotStrategy(world, botNumber);
     }
 
     public void execute() {
