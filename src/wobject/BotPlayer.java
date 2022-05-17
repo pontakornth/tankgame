@@ -5,13 +5,17 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
+import util.DirectionRandomizer;
+import util.DirectionRandomizer.*;
+import static wobject.Direction.*;
+
 import static java.lang.Math.abs;
 
 public class BotPlayer {
 
     private World world;
     private int botNumber;
-    private Random random = new Random();
+    private DirectionRandomizer randomDir = new DirectionRandomizer();
 
     BotPlayer(World world, int botNumber) {
         this.world = world;
@@ -20,29 +24,37 @@ public class BotPlayer {
 
     public void execute() {
         // TODO: implement execute logic here!
+        randomMove();
         // defense the bullet
-        try {
-            Bullet bullet = getIncomingBullet().get(0);
-            Direction direction = bullet.getDirection();
-            System.out.println(direction.name());
-            System.out.println("Bullet " + bullet.getDirection().name());
-        } catch (Exception e) {
-
-        }
     }
 
     // TODO: implement bot logic here!
 
-    public void defense() {
-
+    public void randomMove() {
+        world.moveTank(botNumber, randomDir.getDir());
     }
 
-    public void dodgeBullet() {
+    public boolean defense() {
+        Bullet bullet;
+        Tank botTank = getBotTank();
+        // load closest bullet
+        try {
+            bullet = getIncomingBullet().get(0);
+            Direction direction = bullet.getDirection();
+            System.out.println("Bullet " + bullet.getDirection().name());
+        } catch (Exception e) {
+            return false;
+        }
+        // dodge the bullet
+        if(bullet.getX() + bullet.getDx() == botTank.getX() && bullet.getY() + bullet.getDy() == botTank.getY()) {
+            // TODO: implement here
+            System.out.println("dodge");
+            return true;
+        }
 
-    }
+        // destroy the bullet
 
-    public void destroyBullet(){
-
+        return true;
     }
 
     private List<Bullet> getIncomingBullet() {
