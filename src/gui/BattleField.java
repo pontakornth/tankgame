@@ -48,8 +48,15 @@ public class BattleField extends JPanel implements Observer<GameEvent> {
 
     @Override
     public void onNotify(GameEvent message) {
-        // TODO: Handle update from world such as losing.
-        repaint();
+        // TODO: Add notification dialog
+        // TODO: Back to main menu
+        if (message == GameEvent.Update) {
+            repaint();
+        } else if (message == GameEvent.PlayerOneWon) {
+            System.out.println("Player one won!");
+        } else if (message == GameEvent.PlayerTwoWon) {
+            System.out.println("Player two won!");
+        }
     }
 
     private class MovementListener extends KeyAdapter {

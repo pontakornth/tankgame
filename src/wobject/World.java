@@ -69,6 +69,9 @@ public class World implements Observable<GameEvent> {
                 List<Bullet> bulletsToRemove = new ArrayList<>();
                 List<WObject> tilesToRemove = new ArrayList<>();
 //                List<Tank> tanksToRemove = new ArrayList<>();
+                boolean someoneWon = checkWinCondition();
+                if (someoneWon)
+                    break;
                 updateTankIfNoCollision();
                 removeOffScreenBullets(bulletsToRemove);
                 checkTilesAndBulletsCollision(bulletsToRemove, tilesToRemove);
@@ -98,6 +101,18 @@ public class World implements Observable<GameEvent> {
             }
         });
         thread.start();
+    }
+
+    private boolean checkWinCondition() {
+        boolean playerOneWon = playerTwoTank.getLifePoint() == 0;
+        boolean playerTwoWon = playerOneTank.getLifePoint() == 0;
+        if (playerOneWon) {
+            notifyObservers(GameEvent.PlayerOneWon);
+        } else if (playerTwoWon) {
+            notifyObservers(GameEvent.PlayerTwoWon);
+
+        }
+        return playerOneWon || playerTwoWon;
     }
 
     private void handleBulletsAndTanksCollision(List<Bullet> bulletsToRemove) {
