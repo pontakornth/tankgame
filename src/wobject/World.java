@@ -2,6 +2,7 @@ package wobject;
 
 import util.Observable;
 import util.Observer;
+import wobject.bot.strategy.StrategyFactory.StrategyEnum;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,15 +22,7 @@ public class World implements Observable<GameEvent> {
     private BulletPool bulletPool;
     private Observer<GameEvent> observer;
 
-    public World() {
-        tiles = new ArrayList<>();
-        playerOneTank = new Tank(5, 20, 1);
-        playerTwoTank = new Tank(5, 5, 1);
-        bullets = new ArrayList<>();
-        bulletPool = new BulletPool();
-    }
-
-    public World(List<String> map, int playerNumber) {
+    public World(List<String> map, int playerNumber, StrategyEnum strategyEnum) {
         tiles = new ArrayList<>();
         bullets = new ArrayList<>();
         for(int i=0; i<23; i++) {
@@ -43,8 +36,7 @@ public class World implements Observable<GameEvent> {
                         if (playerNumber == 2) {
                             playerTwoTank = new Tank(j, i, 1, Faction.Red);
                         } else {
-                            // TODO: Create Bot Tank, now it's just template
-                            botPlayer = new BotPlayer(this, 1);
+                            botPlayer = new BotPlayer(this, 1, strategyEnum);
                             playerTwoTank = new Tank(j, i, 1, Faction.Gray);
                         }
                         break;

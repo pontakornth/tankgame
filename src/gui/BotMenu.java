@@ -12,14 +12,16 @@ import java.util.List;
 
 public class BotMenu extends JPanel {
     private BackgroundProcess backgroundProcess;
+    private List<String> map;
 
     private List<StrategyEnum> strategyList = Arrays.asList(StrategyEnum.values());
     private List<JButton> botButtons;
 
     private JButton backButton;
 
-    public BotMenu(BackgroundProcess backgroundProcess) {
+    public BotMenu(BackgroundProcess backgroundProcess, List<String> map) {
         this.backgroundProcess = backgroundProcess;
+        this.map = map;
 
         initMenu();
 
@@ -39,7 +41,7 @@ public class BotMenu extends JPanel {
             button.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    System.out.println(button.getText());
+                    backgroundProcess.changeToOnePlayerGame(map, strategy);
                 }
             });
             botButtons.add(button);

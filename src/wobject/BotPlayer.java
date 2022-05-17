@@ -2,9 +2,7 @@ package wobject;
 
 import wobject.bot.strategy.Strategy;
 import wobject.bot.strategy.StrategyFactory;
-
-import static wobject.bot.strategy.StrategyFactory.StrategyEnum.*;
-
+import wobject.bot.strategy.StrategyFactory.StrategyEnum;
 
 public class BotPlayer {
 
@@ -12,10 +10,10 @@ public class BotPlayer {
     private int botNumber;
     private Strategy strategy;
 
-    BotPlayer(World world, int botNumber) {
+    BotPlayer(World world, int botNumber, StrategyEnum strategyEnum) {
         this.world = world;
         this.botNumber = botNumber;
-        this.strategy = StrategyFactory.getStrategy(world, botNumber, Coward);
+        this.strategy = StrategyFactory.getStrategy(world, botNumber, strategyEnum);
     }
 
     public void execute() {

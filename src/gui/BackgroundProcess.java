@@ -1,6 +1,6 @@
 package gui;
 
-import wobject.bot.strategy.StrategyFactory.StrategyEnum;
+import wobject.bot.strategy.StrategyFactory;
 
 import java.util.List;
 
@@ -36,17 +36,27 @@ public class BackgroundProcess {
         window.repaint();
     }
 
-    public void changeToGame(int playerNumber, List<String> map) {
+    public void changeToOnePlayerGame(List<String> map, StrategyFactory.StrategyEnum strategyEnum) {
         window.getContentPane().removeAll();
-        window.setBattleField(new BattleField(this, playerNumber, map));
+        window.setBattleField(new BattleField(this, 1, map, strategyEnum));
         window.getContentPane().add(window.getBattleField());
         window.getBattleField().requestFocus();
         window.revalidate();
         window.repaint();
     }
 
-    public void changeToBotMenu() {
+    public void changeToTwoPlayerGame(List<String> map) {
         window.getContentPane().removeAll();
+        window.setBattleField(new BattleField(this, 2, map, null));
+        window.getContentPane().add(window.getBattleField());
+        window.getBattleField().requestFocus();
+        window.revalidate();
+        window.repaint();
+    }
+
+    public void changeToBotMenu(List<String> map) {
+        window.getContentPane().removeAll();
+        window.setBotMenu(new BotMenu(this, map));
         window.getContentPane().add(window.getBotMenu());
         window.revalidate();
         window.repaint();

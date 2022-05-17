@@ -45,9 +45,9 @@ public class MapMenu extends JPanel {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if(playerNumber != 2) {
-                        backgroundProcess.changeToBotMenu();
+                        backgroundProcess.changeToBotMenu(MapReader.read(stageFile));
                     } else {
-                        backgroundProcess.changeToGame(playerNumber, MapReader.read(stageFile));
+                        backgroundProcess.changeToTwoPlayerGame(MapReader.read(stageFile));
                     }
                 }
             });

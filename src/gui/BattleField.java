@@ -1,7 +1,6 @@
 package gui;
 
 import config.MovementConfig;
-import util.Observable;
 import util.Observer;
 import wobject.Direction;
 import wobject.GameEvent;
@@ -12,11 +11,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 import config.MovementConfig.KeyProp;
+import wobject.bot.strategy.StrategyFactory.StrategyEnum;
 
 public class BattleField extends JPanel implements Observer<GameEvent> {
 
@@ -30,14 +29,10 @@ public class BattleField extends JPanel implements Observer<GameEvent> {
 
     private BackgroundProcess backgroundProcess;
 
-    BattleField(BackgroundProcess backgroundProcess, int playerNumber, List<String> map) {
+    BattleField(BackgroundProcess backgroundProcess, int playerNumber, List<String> map, StrategyEnum strategyEnum) {
         this.backgroundProcess = backgroundProcess;
         this.playerNumber = playerNumber;
-        if(map == null) {
-            world = new World();
-        } else {
-            world = new World(map, playerNumber);
-        }
+        world = new World(map, playerNumber, strategyEnum);
         world.addObservers(this);
         imageMap = new HashMap<>();
         setFocusable(true);

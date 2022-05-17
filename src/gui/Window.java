@@ -38,7 +38,6 @@ public class Window extends JFrame {
         backgroundProcess = new BackgroundProcess(this);
         gameMenu = new GameMenu(backgroundProcess);
         optionMenu = new OptionMenu(backgroundProcess);
-        botMenu = new BotMenu(backgroundProcess);
     }
 
     public BattleField getBattleField() {
@@ -67,6 +66,10 @@ public class Window extends JFrame {
 
     public void setMapMenu(MapMenu mapMenu) {
         this.mapMenu = mapMenu;
+    }
+
+    public void setBotMenu(BotMenu botMenu) {
+        this.botMenu = botMenu;
     }
 
     public static void main(String[] args) {
