@@ -25,16 +25,17 @@ public class BotMenu extends JPanel {
 
         initMenu();
 
-        System.out.println(strategyList.get(0).name());
-
-        add(new JLabel("Select Your Enemy"));
+        setLayout(null);
         for(JButton button: botButtons) {
             add(button);
         }
         add(backButton);
+
+        setPreferredSize(new Dimension(690, 690));
     }
 
     private void initMenu() {
+        Dimension buttonSize = new Dimension(201, 51);
         botButtons = new ArrayList<JButton>();
         for(StrategyEnum strategy: strategyList) {
             JButton button = new JButton(strategy.name() + " Tank");
@@ -46,7 +47,11 @@ public class BotMenu extends JPanel {
             });
             botButtons.add(button);
         }
+        for(int i=0; i<botButtons.size(); i++) {
+            botButtons.get(i).setBounds(244, 249+i*70, buttonSize.width, buttonSize.height);
+        }
         backButton = new JButton("Return to Menu");
+        backButton.setBounds(244, 459, buttonSize.width, buttonSize.height);
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -58,6 +63,6 @@ public class BotMenu extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        // TODO: add background here
+        g.drawImage(new ImageIcon("img/bg-bot-menu.png").getImage(), 0, 0, null);
     }
 }
