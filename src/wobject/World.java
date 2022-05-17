@@ -6,7 +6,7 @@ import util.Observer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class World implements Observable<String> {
+public class World implements Observable<GameEvent> {
 
     // TODO: implement game logic here!
     // tiles are for fixed tiles such as bricks, steel, or trees
@@ -18,7 +18,7 @@ public class World implements Observable<String> {
     // Only bullets on screen are listed here.
     private List<Bullet> bullets;
     private BulletPool bulletPool;
-    private Observer<String> observer;
+    private Observer<GameEvent> observer;
 
     public World() {
         tiles = new ArrayList<>() {{
@@ -89,7 +89,7 @@ public class World implements Observable<String> {
                 for (WObject tileToRemove: tilesToRemove) {
                     tiles.remove(tileToRemove);
                 }
-                notifyObservers("UPDATE");
+                notifyObservers(GameEvent.Update);
                 try {
                     Thread.sleep(100 * 3);
                 } catch (Exception e) {
@@ -195,13 +195,13 @@ public class World implements Observable<String> {
     }
 
     @Override
-    public void addObservers(Observer<String> observer) {
+    public void addObservers(Observer<GameEvent> observer) {
         if (this.observer == null)
             this.observer = observer;
     }
 
     @Override
-    public void notifyObservers(String message) {
+    public void notifyObservers(GameEvent message) {
         observer.onNotify(message);
     }
 

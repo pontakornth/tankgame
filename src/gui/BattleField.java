@@ -4,6 +4,7 @@ import config.MovementConfig;
 import util.Observable;
 import util.Observer;
 import wobject.Direction;
+import wobject.GameEvent;
 import wobject.WObject;
 import wobject.World;
 
@@ -16,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 
-public class BattleField extends JPanel implements Observer<String> {
+public class BattleField extends JPanel implements Observer<GameEvent> {
 
     // TODO: add world object and update its graphic
     private World world;
@@ -41,20 +42,19 @@ public class BattleField extends JPanel implements Observer<String> {
         setFocusable(true);
         setPreferredSize(new Dimension(SIZE*GRID_PIXEL, SIZE*GRID_PIXEL));
         MovementListener movementListener = new MovementListener(this);
-        movementListener.addObservers(this);
         addKeyListener(movementListener);
         world.init();
     }
 
     @Override
-    public void onNotify(String message) {
+    public void onNotify(GameEvent message) {
         // TODO: Handle update from world such as losing.
         repaint();
     }
 
-    private class MovementListener extends KeyAdapter implements Observable<String> {
+    private class MovementListener extends KeyAdapter {
         private Observer<String> observer;
-        private BattleField battleField;
+        private final BattleField battleField;
 
         public MovementListener(BattleField battleField) {
             this.battleField = battleField;
@@ -116,17 +116,6 @@ public class BattleField extends JPanel implements Observer<String> {
                     battleField.stopTank(1);
                 }
             }
-        }
-
-        @Override
-        public void addObservers(Observer<String> observer) {
-            if (this.observer == null)
-                this.observer = observer;
-        }
-
-        @Override
-        public void notifyObservers(String message) {
-            observer.onNotify(message);
         }
     }
 
