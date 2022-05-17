@@ -60,7 +60,6 @@ public class BattleField extends JPanel implements Observer<GameEvent> {
         }
     }
 
-    // TODO: Handle Bot Key Event or Change Methods
     private class MovementListener extends KeyAdapter {
         private Observer<String> observer;
         private final BattleField battleField;

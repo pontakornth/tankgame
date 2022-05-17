@@ -1,5 +1,7 @@
 package gui;
 
+import wobject.bot.strategy.StrategyFactory.StrategyEnum;
+
 import java.util.List;
 
 public class BackgroundProcess {
@@ -39,6 +41,13 @@ public class BackgroundProcess {
         window.setBattleField(new BattleField(this, playerNumber, map));
         window.getContentPane().add(window.getBattleField());
         window.getBattleField().requestFocus();
+        window.revalidate();
+        window.repaint();
+    }
+
+    public void changeToBotMenu() {
+        window.getContentPane().removeAll();
+        window.getContentPane().add(window.getBotMenu());
         window.revalidate();
         window.repaint();
     }

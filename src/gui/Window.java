@@ -17,6 +17,7 @@ public class Window extends JFrame {
     private GameMenu gameMenu;
     private OptionMenu optionMenu;
     private MapMenu mapMenu;
+    private BotMenu botMenu;
 
     public Window() {
         super();
@@ -37,6 +38,7 @@ public class Window extends JFrame {
         backgroundProcess = new BackgroundProcess(this);
         gameMenu = new GameMenu(backgroundProcess);
         optionMenu = new OptionMenu(backgroundProcess);
+        botMenu = new BotMenu(backgroundProcess);
     }
 
     public BattleField getBattleField() {
@@ -49,6 +51,10 @@ public class Window extends JFrame {
 
     public OptionMenu getOptionMenu() {
         return optionMenu;
+    }
+
+    public BotMenu getBotMenu() {
+        return botMenu;
     }
 
     public MapMenu getMapMenu() {
