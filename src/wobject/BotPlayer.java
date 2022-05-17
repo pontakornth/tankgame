@@ -23,6 +23,7 @@ public class BotPlayer {
         // TODO: implement execute logic here!
         // defense the bullet
         defense();
+        randomMove();
     }
 
     // TODO: implement bot logic here!
@@ -38,7 +39,6 @@ public class BotPlayer {
         try {
             bullet = getIncomingBullet().get(0);
             Direction direction = bullet.getDirection();
-            System.out.println("Bullet " + bullet.getDirection().name());
         } catch (Exception e) {
             return;
         }
