@@ -12,7 +12,8 @@ public class World implements Observable<String> {
     // tiles are for fixed tiles such as bricks, steel, or trees
     private List<WObject> tiles;
 
-    private List<Tank> tanks;
+    private Tank playerOneTank;
+    private Tank playerTwoTank;
 
     // Only bullets on screen are listed here.
     private List<Bullet> bullets;
@@ -27,17 +28,14 @@ public class World implements Observable<String> {
             add(new Steel(1, 0));
             add(new Trees(2, 0));
         }};
-        tanks = new ArrayList<>(){{
-            add(new Tank(5, 20, 1));
-            add(new Tank(5, 5, 2));
-        }};
+        playerOneTank = new Tank(5, 20, 1);
+        playerTwoTank = new Tank(5, 5, 1);
         bullets = new ArrayList<>();
         bulletPool = new BulletPool();
     }
 
     public World(List<String> map, int playerNumber) {
         // TODO: handle one/two players game
-        tanks = new ArrayList<>();
         tiles = new ArrayList<>();
         bullets = new ArrayList<>();
         for(int i=0; i<23; i++) {
@@ -45,11 +43,11 @@ public class World implements Observable<String> {
                 char c = map.get(i).charAt(j);
                 switch (c) {
                     case '1':
-                        tanks.add(new Tank(j, i, 1, Faction.Blue));
+                        playerOneTank = new Tank(j, i, 1, Faction.Blue);
                         break;
                     case '2':
                         // TODO: Handle case for singleplayer.
-                        tanks.add(new Tank(j, i, 2, Faction.Red));
+                        playerTwoTank = new Tank(j, i, 1, Faction.Red);
                         break;
                     case 'B':
                         tiles.add(new Brick(j, i));
@@ -106,12 +104,16 @@ public class World implements Observable<String> {
 
     private void handleBulletsAndTanksCollision(List<Bullet> bulletsToRemove) {
         for (Bullet bullet: bullets) {
-            for (Tank tank: tanks) {
-                if (bullet.hit(tank) && !bullet.sameFaction(tank)) {
-                    // Bullet hit different
-                    tank.damage();
-                    bulletsToRemove.add(bullet);
-                }
+            // TODO: Remove duplicate(?)
+            if (bullet.hit(playerOneTank) && !bullet.sameFaction(playerOneTank)) {
+                // Bullet hit different
+                playerOneTank.damage();
+                bulletsToRemove.add(bullet);
+            }
+            if (bullet.hit(playerTwoTank) && !bullet.sameFaction(playerTwoTank)) {
+                // Bullet hit different
+                playerTwoTank.damage();
+                bulletsToRemove.add(bullet);
             }
         }
     }
@@ -162,31 +164,28 @@ public class World implements Observable<String> {
     }
 
     private void updateTankIfNoCollision() {
-        for (Tank tank: tanks) {
-            if (!willCollide(tank)) {
-                    tank.update();
-            }
+        if (checkNoCollision(playerOneTank, playerTwoTank)) {
+                playerOneTank.update();
+        }
+        if (checkNoCollision(playerTwoTank, playerOneTank)) {
+                playerTwoTank.update();
         }
     }
 
-    private boolean willCollide(Tank tank) {
+    private boolean checkNoCollision(Tank tank, Tank otherTank) {
         int newX = tank.getX() + tank.getDx();
         int newY = tank.getY() + tank.getDy();
         if(newX < 0 || newX >= 23 || newY < 0 || newY >= 23) {
-            return true;
+            return false;
         }
-        for (Tank otherTank: tanks) {
-            if (otherTank != tank) {
-                if (newX == otherTank.getX() && newY == otherTank.getY())
-                    return true;
-            }
-        }
+        if (newX == otherTank.getX() && newY == otherTank.getY())
+            return false;
         for(WObject t: tiles) {
             if(t.getX() == newX && t.getY() == newY) {
-                return t.isSolid();
+                return !t.isSolid();
             }
         }
-        return false;
+        return true;
     }
 
     public List<WObject> getTiles() {
@@ -194,7 +193,7 @@ public class World implements Observable<String> {
     }
 
     public List<Tank> getTanks() {
-        return tanks;
+        return new ArrayList<>(){{ add(playerOneTank); add(playerTwoTank); }};
     }
 
     @Override
@@ -208,8 +207,14 @@ public class World implements Observable<String> {
         observer.onNotify(message);
     }
 
-    public void moveTank(int tankIndex, Direction direction) {
-        Tank tank = tanks.get(tankIndex);
+    public void moveTank(int playerNumber, Direction direction) {
+        Tank tank = null;
+        if (playerNumber == 0) {
+            tank = playerOneTank;
+        } else if (playerNumber == 1) {
+            tank = playerTwoTank;
+        }
+
         if (tank != null) {
             if (direction == Direction.North) {
                 tank.turnNorth();
@@ -226,14 +231,24 @@ public class World implements Observable<String> {
         }
     }
 
-    public void stopTank(int tankIndex) {
-        Tank tank = tanks.get(tankIndex);
+    public void stopTank(int playerNumber) {
+        Tank tank = null;
+        if (playerNumber == 0)  {
+            tank = playerOneTank;
+        } else if (playerNumber == 1) {
+            tank = playerTwoTank;
+        }
         if (tank != null)
             tank.setStop();
     }
 
-    public void fireBullet(int tankIndex) {
-        Tank tank = tanks.get(tankIndex);
+    public void fireBullet(int playerNumber) {
+        Tank tank = null;
+        if (playerNumber == 0) {
+            tank = playerOneTank;
+        } else if (playerNumber == 1) {
+            tank = playerTwoTank;
+        }
         if (tank != null) {
             int tankX = tank.getX();
             int tankY = tank.getY();
