@@ -6,6 +6,16 @@ import wobject.World;
 import static wobject.Direction.*;
 
 public class CommandFactory {
+
+    public static enum CommandEnum {
+        MoveNorth,
+        MoveSouth,
+        MoveEast,
+        MoveWest,
+        MoveStop,
+        MoveFire;
+    }
+
     public static GameCommand getMoveCommand(World world, int playerNumber, CommandEnum commandEnum) {
         switch (commandEnum) {
             case MoveNorth:
