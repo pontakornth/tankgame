@@ -14,6 +14,7 @@ public class World implements Observable<GameEvent> {
 
     private Tank playerOneTank;
     private Tank playerTwoTank;
+    private BotPlayer botPlayer;
 
     // Only bullets on screen are listed here.
     private List<Bullet> bullets;
@@ -43,6 +44,7 @@ public class World implements Observable<GameEvent> {
                             playerTwoTank = new Tank(j, i, 1, Faction.Red);
                         } else {
                             // TODO: Create Bot Tank, now it's just template
+                            botPlayer = new BotPlayer(this, 1);
                             playerTwoTank = new Tank(j, i, 1, Faction.Gray);
                         }
                         break;
@@ -63,10 +65,14 @@ public class World implements Observable<GameEvent> {
 
     public void init() {
         Thread thread = new Thread(() -> {
-            // TODO: Add win condition.
             while (true) {
                 List<Bullet> bulletsToRemove = new ArrayList<>();
                 List<WObject> tilesToRemove = new ArrayList<>();
+
+                // TODO: implement bot player here
+                if(botPlayer != null) {
+                    botPlayer.execute();
+                }
 
                 boolean someoneWon = checkWinCondition();
                 if (someoneWon)
@@ -84,7 +90,7 @@ public class World implements Observable<GameEvent> {
                 for (WObject tileToRemove: tilesToRemove) {
                     tiles.remove(tileToRemove);
                 }
-                notifyObservers(GameEvent.Update);
+                notifyObservers(GameEvent.Update); // BattleField will repaint this
                 try {
                     Thread.sleep(100 * 3);
                 } catch (Exception e) {
@@ -253,6 +259,8 @@ public class World implements Observable<GameEvent> {
         } else if (playerNumber == 1) {
             tank = playerTwoTank;
         }
+        // unable to move when firing a bullet
+        stopTank(playerNumber);
         if (tank != null) {
             int tankX = tank.getX();
             int tankY = tank.getY();
