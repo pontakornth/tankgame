@@ -13,6 +13,7 @@ public class BackgroundProcess {
     public void changeToOptionMenu() {
         window.getContentPane().removeAll();
         window.getContentPane().add(window.getOptionMenu());
+        window.getOptionMenu().requestFocus();
         window.revalidate();
         window.repaint();
     }
@@ -40,5 +41,9 @@ public class BackgroundProcess {
         window.getBattleField().requestFocus();
         window.revalidate();
         window.repaint();
+    }
+
+    public Window getWindow() {
+        return window;
     }
 }

@@ -3,23 +3,33 @@ package wobject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Tank extends WObject implements Movable{
+public class Tank extends WObject implements Movable, FactionObject {
+
+    private final Faction faction;
 
     public Tank(int x, int y, int lifePoint) {
-       super(x, y, lifePoint);
-       // TODO: Add information about side.
-       directionImageFileName = new HashMap<>();
-       directionImageFileName.put(Direction.North, "./img/blue-tank-front.png");
-       directionImageFileName.put(Direction.South, "./img/blue-tank-back.png");
-       directionImageFileName.put(Direction.East, "./img/blue-tank-right.png");
-       directionImageFileName.put(Direction.West, "./img/blue-tank-left.png");
+       this(x, y, lifePoint, Faction.Blue);
+    }
+
+    public Tank(int x, int y, int lifePoint, Faction faction) {
+        super(x,y);
+        this.lifePoint = lifePoint;
+        this.faction = faction;
+        directionImageFileName = new HashMap<>();
+        direction = Direction.North;
+        directionImageFileName.put(Direction.North, getFileName(faction, "front"));
+        directionImageFileName.put(Direction.South, getFileName(faction, "back"));
+        directionImageFileName.put(Direction.East, getFileName(faction, "right"));
+        directionImageFileName.put(Direction.West, getFileName(faction, "left"));
+
+    }
+
+    private static String getFileName(Faction faction, String direction) {
+        return String.format("./img/%s-tank-%s.png", faction, direction);
     }
     private Direction direction;
-    private Map<Direction, String> directionImageFileName;
+    private final Map<Direction, String> directionImageFileName;
 
-    public void fire() {
-        // TODO: implement bullet fire method here
-    }
 
     @Override
     public void turnNorth() {
@@ -78,5 +88,14 @@ public class Tank extends WObject implements Movable{
     public Direction getDirection() {
         return direction;
     }
-    // TODO: Add functionality to tank.
+
+    @Override
+    public Faction getFaction() {
+        return faction;
+    }
+
+    @Override
+    public boolean sameFaction(FactionObject factionObject) {
+        return faction == factionObject.getFaction();
+    }
 }

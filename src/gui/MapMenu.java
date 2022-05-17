@@ -14,7 +14,7 @@ public class MapMenu extends JPanel {
     private int playerNumber;
 
     private List<JButton> stageButtons;
-    private List<String> stageNames = new ArrayList<>(List.of("plain", "fortress", "maze"));
+    private List<String> stageNames = new ArrayList<>(List.of("Plain", "Fortress", "Maze"));
     private List<String> stageFiles = new ArrayList<>(List.of("maps/plain.txt", "maps/fortress.txt", "maps/maze.txt"));
 
     private JButton backButton;
@@ -50,7 +50,7 @@ public class MapMenu extends JPanel {
             button.setBounds(244, 249+i*70, buttonSize.width, buttonSize.height);
             stageButtons.add(button);
         }
-        backButton = new JButton("return to menu");
+        backButton = new JButton("Return to Menu");
         backButton.setBounds(244, 459, buttonSize.width, buttonSize.height);
         backButton.addActionListener(new ActionListener() {
             @Override
