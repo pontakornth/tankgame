@@ -2,18 +2,17 @@ package util;
 
 import wobject.Direction;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import static wobject.Direction.*;
 
-public class DirectionRandomizer {
+public class DirUtils {
 
     private Random random = new Random();
     private List<Direction> directions = Arrays.asList(North, South, East, West);
 
-    public DirectionRandomizer() {
+    public DirUtils() {
 
     }
 
@@ -29,5 +28,19 @@ public class DirectionRandomizer {
                 return direction;
             }
         }
+    }
+
+    public Direction getOppositeDir(Direction dir) {
+        switch (dir) {
+            case North:
+                return South;
+            case South:
+                return North;
+            case East:
+                return West;
+            case West:
+                return East;
+        }
+        return null;
     }
 }

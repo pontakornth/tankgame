@@ -3,11 +3,8 @@ package wobject;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Random;
 
-import util.DirectionRandomizer;
-import util.DirectionRandomizer.*;
-import static wobject.Direction.*;
+import util.DirUtils;
 
 import static java.lang.Math.abs;
 
@@ -15,7 +12,7 @@ public class BotPlayer {
 
     private World world;
     private int botNumber;
-    private DirectionRandomizer randomDir = new DirectionRandomizer();
+    private DirUtils dirUtils = new DirUtils();
 
     BotPlayer(World world, int botNumber) {
         this.world = world;
@@ -24,17 +21,17 @@ public class BotPlayer {
 
     public void execute() {
         // TODO: implement execute logic here!
-        randomMove();
         // defense the bullet
+        defense();
     }
 
     // TODO: implement bot logic here!
 
     public void randomMove() {
-        world.moveTank(botNumber, randomDir.getDir());
+        world.moveTank(botNumber, dirUtils.getDir());
     }
 
-    public boolean defense() {
+    public void defense() {
         Bullet bullet;
         Tank botTank = getBotTank();
         // load closest bullet
@@ -43,18 +40,21 @@ public class BotPlayer {
             Direction direction = bullet.getDirection();
             System.out.println("Bullet " + bullet.getDirection().name());
         } catch (Exception e) {
-            return false;
+            return;
         }
         // dodge the bullet
-        if(bullet.getX() + bullet.getDx() == botTank.getX() && bullet.getY() + bullet.getDy() == botTank.getY()) {
-            // TODO: implement here
-            System.out.println("dodge");
-            return true;
+        if(bullet.getX() + 2*bullet.getDx() == botTank.getX() && bullet.getY() + 2*bullet.getDy() == botTank.getY()) {
+            world.moveTank(botNumber, dirUtils.getDirWithout(dirUtils.getOppositeDir(bullet.getDirection())));
+            return;
         }
-
         // destroy the bullet
-
-        return true;
+        if(bullet.getX() + 3*bullet.getDx() == botTank.getX()
+                && bullet.getY() + 3*bullet.getDy() == botTank.getY()
+                && bullet.getDirection() == dirUtils.getOppositeDir(botTank.getDirection())
+        ) {
+            world.fireBullet(botNumber);
+            return;
+        }
     }
 
     private List<Bullet> getIncomingBullet() {

@@ -66,13 +66,13 @@ public class World implements Observable<GameEvent> {
     public void init() {
         Thread thread = new Thread(() -> {
             while (true) {
-                List<Bullet> bulletsToRemove = new ArrayList<>();
-                List<WObject> tilesToRemove = new ArrayList<>();
-
                 // TODO: implement bot player here
                 if(botPlayer != null) {
                     botPlayer.execute();
                 }
+
+                List<Bullet> bulletsToRemove = new ArrayList<>();
+                List<WObject> tilesToRemove = new ArrayList<>();
 
                 boolean someoneWon = checkWinCondition();
                 if (someoneWon)
