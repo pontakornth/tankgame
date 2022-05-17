@@ -1,9 +1,11 @@
 package wobject;
 
-public class Bullet extends WObject implements Movable {
+public class Bullet extends WObject implements Movable, FactionObject {
 
     private int dx;
     private int dy;
+
+    private Faction faction;
 
     Bullet(int x, int y) {
         super(x, y);
@@ -67,7 +69,22 @@ public class Bullet extends WObject implements Movable {
         this.dy = dy;
     }
 
+    public void refreshState(int x, int y, int dx, int dy, Faction faction) {
+        refreshState(x, y, dx, dy);
+        this.faction = faction;
+    }
+
     public boolean isOutsideBorder(int borderHorizontalSize, int borderVerticalSize) {
         return (x < 0 || x >= borderHorizontalSize || y < 0 || y >= borderVerticalSize);
+    }
+
+    @Override
+    public Faction getFaction() {
+        return faction;
+    }
+
+    @Override
+    public boolean sameFaction(FactionObject factionObject) {
+        return faction == factionObject.getFaction();
     }
 }

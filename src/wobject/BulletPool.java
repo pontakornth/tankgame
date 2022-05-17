@@ -23,13 +23,13 @@ public class BulletPool {
         this(10);
     }
 
-    public Bullet requestBullet(int x, int y, int dx, int dy) {
+    public Bullet requestBullet(int x, int y, int dx, int dy, Faction faction) {
         if (bullets.isEmpty()) {
             bullets.add(new Bullet(0, 0));
             currentSize++;
         }
         Bullet bullet = bullets.remove(0);
-        bullet.refreshState(x, y, dx, dy);
+        bullet.refreshState(x, y, dx, dy, faction);
         return bullet;
     }
 
