@@ -1,18 +1,10 @@
 package wobject;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-
-import util.DirUtils;
-import static util.DistanceCalculator.manhattanDist;
-
-import wobject.bot.strategy.CowardStrategy;
-import wobject.bot.strategy.IdiotStrategy;
 import wobject.bot.strategy.Strategy;
-import wobject.command.GameCommand;
-import static wobject.command.CommandFactory.CommandEnum.*;
-import static wobject.command.CommandFactory.getMoveCommand;
+import wobject.bot.strategy.StrategyFactory;
+
+import static wobject.bot.strategy.StrategyFactory.StrategyEnum.*;
+
 
 public class BotPlayer {
 
@@ -23,7 +15,7 @@ public class BotPlayer {
     BotPlayer(World world, int botNumber) {
         this.world = world;
         this.botNumber = botNumber;
-        this.strategy = new IdiotStrategy(world, botNumber);
+        this.strategy = StrategyFactory.getStrategy(world, botNumber, Coward);
     }
 
     public void execute() {
