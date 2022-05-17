@@ -132,6 +132,7 @@ public class OptionMenu extends JPanel{
 
     public class KeyTextField extends JTextField {
         KeyTextField() {
+            setFocusable(false);
             setEditable(false);
             ((AbstractDocument) getDocument()).setDocumentFilter(new UppercaseDocumentFilter());
         }
