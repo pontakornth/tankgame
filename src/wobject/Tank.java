@@ -72,9 +72,16 @@ public class Tank extends WObject implements Movable, FactionObject {
     }
 
     @Override
+    public boolean damage() {
+        lifePoint--;
+        return true;
+    }
+
+    @Override
     public String getSpriteFileName() {
-        // TODO: Change name based on type.
-        return directionImageFileName.getOrDefault(direction, "./img/blue-tank-front.png");
+        if (lifePoint <= 0)
+            return null;
+        return directionImageFileName.get(direction);
     }
 
     public int getDx() {
