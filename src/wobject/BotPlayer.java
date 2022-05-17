@@ -52,10 +52,11 @@ public class BotPlayer {
             bullet = getIncomingBullet().get(0);
             Direction direction = bullet.getDirection();
         } catch (Exception e) {
+            commands.add(getMoveCommand(world, botNumber, MoveStop));
             return;
         }
         // dodge the bullet
-        if(bullet.getX() + 2*bullet.getDx() == botTank.getX() && bullet.getY() + 2*bullet.getDy() == botTank.getY()) {
+        if(bullet.getX() + bullet.getDx() == botTank.getX() && bullet.getY() + bullet.getDy() == botTank.getY()) {
             Direction dir =  dirUtils.getDirWithout(dirUtils.getOppositeDir(bullet.getDirection()));
             switch (dir) {
                 case North:
@@ -71,17 +72,16 @@ public class BotPlayer {
                     commands.add(getMoveCommand(world, botNumber, MoveWest));
                     break;
             }
-            commands.add(getMoveCommand(world, botNumber, MoveStop));
             return;
         }
-//        // destroy the bullet
-//        if(bullet.getX() + 3*bullet.getDx() == botTank.getX()
-//                && bullet.getY() + 3*bullet.getDy() == botTank.getY()
-//                && bullet.getDirection() == dirUtils.getOppositeDir(botTank.getDirection())
-//        ) {
-//            world.fireBullet(botNumber);
-//            return;
-//        }
+        // destroy the bullet
+        if(bullet.getX() + 3*bullet.getDx() == botTank.getX()
+                && bullet.getY() + 3*bullet.getDy() == botTank.getY()
+                && bullet.getDirection() == dirUtils.getOppositeDir(botTank.getDirection())
+        ) {
+            commands.add(getMoveCommand(world, botNumber, MoveFire));
+            return;
+        }
     }
 
     private List<Bullet> getIncomingBullet() {
