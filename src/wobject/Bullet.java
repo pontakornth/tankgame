@@ -8,7 +8,7 @@ public class Bullet extends WObject implements Movable, FactionObject {
     private Faction faction;
     private Direction direction;
 
-    Bullet(int x, int y) {
+    public Bullet(int x, int y) {
         super(x, y);
     }
 

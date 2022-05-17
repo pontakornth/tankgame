@@ -58,7 +58,7 @@ public class World implements Observable<GameEvent> {
     public void init() {
         Thread thread = new Thread(() -> {
             while (true) {
-                // TODO: implement bot player here
+
                 if(botPlayer != null) {
                     botPlayer.execute();
                 }
