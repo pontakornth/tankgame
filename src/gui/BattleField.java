@@ -4,6 +4,7 @@ import config.MovementConfig;
 import util.Observable;
 import util.Observer;
 import wobject.Direction;
+import wobject.GameEvent;
 import wobject.WObject;
 import wobject.World;
 
@@ -17,7 +18,7 @@ import java.util.Map;
 import java.util.List;
 import config.MovementConfig.KeyProp;
 
-public class BattleField extends JPanel implements Observer<String> {
+public class BattleField extends JPanel implements Observer<GameEvent> {
 
     // TODO: add world object and update its graphic
     private World world;
@@ -42,20 +43,26 @@ public class BattleField extends JPanel implements Observer<String> {
         setFocusable(true);
         setPreferredSize(new Dimension(SIZE*GRID_PIXEL, SIZE*GRID_PIXEL));
         MovementListener movementListener = new MovementListener(this);
-        movementListener.addObservers(this);
         addKeyListener(movementListener);
         world.init();
     }
 
     @Override
-    public void onNotify(String message) {
-        // TODO: Handle update from world such as losing.
-        repaint();
+    public void onNotify(GameEvent message) {
+        // TODO: Add notification dialog
+        // TODO: Back to main menu
+        if (message == GameEvent.Update) {
+            repaint();
+        } else if (message == GameEvent.PlayerOneWon) {
+            System.out.println("Player one won!");
+        } else if (message == GameEvent.PlayerTwoWon) {
+            System.out.println("Player two won!");
+        }
     }
 
-    private class MovementListener extends KeyAdapter implements Observable<String> {
+    private class MovementListener extends KeyAdapter {
         private Observer<String> observer;
-        private BattleField battleField;
+        private final BattleField battleField;
 
         public MovementListener(BattleField battleField) {
             this.battleField = battleField;
@@ -118,29 +125,18 @@ public class BattleField extends JPanel implements Observer<String> {
                 }
             }
         }
-
-        @Override
-        public void addObservers(Observer<String> observer) {
-            if (this.observer == null)
-                this.observer = observer;
-        }
-
-        @Override
-        public void notifyObservers(String message) {
-            observer.onNotify(message);
-        }
     }
 
-    private void fireBullet(int tankIndex) {
-        world.fireBullet(tankIndex);
+    private void fireBullet(int playerNumber) {
+        world.fireBullet(playerNumber);
     }
 
-    private void stopTank(int tankIndex) {
-        world.stopTank(tankIndex);
+    private void stopTank(int playerNumber) {
+        world.stopTank(playerNumber);
     }
 
-    private void moveTank(int tankIndex, Direction direction) {
-        world.moveTank(tankIndex, direction);
+    private void moveTank(int playerNumber, Direction direction) {
+        world.moveTank(playerNumber, direction);
     }
 
     // paint methods

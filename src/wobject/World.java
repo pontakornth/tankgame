@@ -6,38 +6,34 @@ import util.Observer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class World implements Observable<String> {
+public class World implements Observable<GameEvent> {
 
     // TODO: implement game logic here!
     // tiles are for fixed tiles such as bricks, steel, or trees
     private List<WObject> tiles;
 
-    private List<Tank> tanks;
+    private Tank playerOneTank;
+    private Tank playerTwoTank;
 
     // Only bullets on screen are listed here.
     private List<Bullet> bullets;
     private BulletPool bulletPool;
-    private Observer<String> observer;
+    private Observer<GameEvent> observer;
 
     public World() {
-        // TODO: Load map from files instead.
-        // TODO: Tiles must be located based on index.
         tiles = new ArrayList<>() {{
             add(new Brick(0, 0));
             add(new Steel(1, 0));
             add(new Trees(2, 0));
         }};
-        tanks = new ArrayList<>(){{
-            add(new Tank(5, 20, 1));
-            add(new Tank(5, 5, 2));
-        }};
+        playerOneTank = new Tank(5, 20, 1);
+        playerTwoTank = new Tank(5, 5, 1);
         bullets = new ArrayList<>();
         bulletPool = new BulletPool();
     }
 
     public World(List<String> map, int playerNumber) {
         // TODO: handle one/two players game
-        tanks = new ArrayList<>();
         tiles = new ArrayList<>();
         bullets = new ArrayList<>();
         for(int i=0; i<23; i++) {
@@ -45,11 +41,11 @@ public class World implements Observable<String> {
                 char c = map.get(i).charAt(j);
                 switch (c) {
                     case '1':
-                        tanks.add(new Tank(j, i, 1, Faction.Blue));
+                        playerOneTank = new Tank(j, i, 1, Faction.Blue);
                         break;
                     case '2':
                         // TODO: Handle case for singleplayer.
-                        tanks.add(new Tank(j, i, 2, Faction.Red));
+                        playerTwoTank = new Tank(j, i, 1, Faction.Red);
                         break;
                     case 'B':
                         tiles.add(new Brick(j, i));
@@ -72,16 +68,31 @@ public class World implements Observable<String> {
             while (true) {
                 List<Bullet> bulletsToRemove = new ArrayList<>();
                 List<WObject> tilesToRemove = new ArrayList<>();
+//                List<Tank> tanksToRemove = new ArrayList<>();
+                boolean someoneWon = checkWinCondition();
+                if (someoneWon)
+                    break;
                 updateTankIfNoCollision();
                 removeOffScreenBullets(bulletsToRemove);
                 checkTilesAndBulletsCollision(bulletsToRemove, tilesToRemove);
-                for (Bullet indexBulletToRemove: bulletsToRemove) {
-                    bullets.remove(indexBulletToRemove);
+                handleBulletsAndBulletsCollision(bulletsToRemove);
+                handleBulletsAndTanksCollision(bulletsToRemove);
+//                for (Tank tank: tanks) {
+//                    if (tank.getLifePoint() == 0) {
+//                        tanksToRemove.add(tank);
+//                    }
+//                }
+//                for (Tank tank: tanksToRemove) {
+//                    tanks.remove(tank);
+//                }
+                for (Bullet bulletToRemove: bulletsToRemove) {
+                    bulletPool.returnBullet(bulletToRemove);
+                    bullets.remove(bulletToRemove);
                 }
                 for (WObject tileToRemove: tilesToRemove) {
                     tiles.remove(tileToRemove);
                 }
-                notifyObservers("UPDATE");
+                notifyObservers(GameEvent.Update);
                 try {
                     Thread.sleep(100 * 3);
                 } catch (Exception e) {
@@ -92,17 +103,58 @@ public class World implements Observable<String> {
         thread.start();
     }
 
+    private boolean checkWinCondition() {
+        boolean playerOneWon = playerTwoTank.getLifePoint() == 0;
+        boolean playerTwoWon = playerOneTank.getLifePoint() == 0;
+        if (playerOneWon) {
+            notifyObservers(GameEvent.PlayerOneWon);
+        } else if (playerTwoWon) {
+            notifyObservers(GameEvent.PlayerTwoWon);
+
+        }
+        return playerOneWon || playerTwoWon;
+    }
+
+    private void handleBulletsAndTanksCollision(List<Bullet> bulletsToRemove) {
+        for (Bullet bullet: bullets) {
+            // TODO: Remove duplicate(?)
+            if (bullet.hit(playerOneTank) && !bullet.sameFaction(playerOneTank)) {
+                // Bullet hit different
+                playerOneTank.damage();
+                bulletsToRemove.add(bullet);
+            }
+            if (bullet.hit(playerTwoTank) && !bullet.sameFaction(playerTwoTank)) {
+                // Bullet hit different
+                playerTwoTank.damage();
+                bulletsToRemove.add(bullet);
+            }
+        }
+    }
+
+    private void handleBulletsAndBulletsCollision(List<Bullet> bulletsToRemove) {
+        // Bullet-bullet collision.
+        for (int i = 0; i < bullets.size(); i++) {
+            Bullet firstBullet = bullets.get(i);
+            for (int j = i + 1; j < bullets.size(); j++) {
+                Bullet secondBullet = bullets.get(j);
+                if (firstBullet.hit(secondBullet) && !firstBullet.sameFaction(secondBullet)) {
+                    bulletsToRemove.add(firstBullet);
+                    bulletsToRemove.add(secondBullet);
+                }
+            }
+        }
+    }
+
     private void checkTilesAndBulletsCollision(List<Bullet> bulletsToRemove, List<WObject> tilesToRemove) {
         for (WObject tile : tiles) {
             // Only check for solid tile.
             if (tile.isSolid()) {
                 for (Bullet bullet : bullets) {
-                    if (tile.getX() == bullet.getX() && tile.getY() == bullet.getY()) {
+                    if (tile.hit(bullet)) {
                         // Collide!
                         boolean hit = tile.damage();
                         if (hit) {
                             bulletsToRemove.add(bullet);
-                            bulletPool.returnBullet(bullet);
                             if (tile.getLifePoint() == 0) {
                                 tilesToRemove.add(tile);
                             }
@@ -117,7 +169,6 @@ public class World implements Observable<String> {
         for (Bullet bullet : bullets) {
             // TODO: Check collision against brick and tanks
             if (bullet.isOutsideBorder(23, 23)) {
-                bulletPool.returnBullet(bullet);
                 bulletsToRemove.add(bullet);
             }
             ;
@@ -126,32 +177,28 @@ public class World implements Observable<String> {
     }
 
     private void updateTankIfNoCollision() {
-        for (Tank tank: tanks) {
-            if (!willCollide(tank)) {
-                    tank.update();
-            }
+        if (checkNoCollision(playerOneTank, playerTwoTank)) {
+                playerOneTank.update();
+        }
+        if (checkNoCollision(playerTwoTank, playerOneTank)) {
+                playerTwoTank.update();
         }
     }
 
-    private boolean willCollide(Tank tank) {
+    private boolean checkNoCollision(Tank tank, Tank otherTank) {
         int newX = tank.getX() + tank.getDx();
         int newY = tank.getY() + tank.getDy();
-        // TODO: Handle tank collision
-        // TODO: Replace 23 with world size
-//        int index = newY*23 + newX;
-//        if (index < 0 || index >= tiles.size())
-//            return false;
-//        WObject tile = tiles.get(index);
-//        return tile.isSolid();
         if(newX < 0 || newX >= 23 || newY < 0 || newY >= 23) {
-            return true;
+            return false;
         }
+        if (newX == otherTank.getX() && newY == otherTank.getY())
+            return false;
         for(WObject t: tiles) {
             if(t.getX() == newX && t.getY() == newY) {
-                return t.isSolid();
+                return !t.isSolid();
             }
         }
-        return false;
+        return true;
     }
 
     public List<WObject> getTiles() {
@@ -159,22 +206,28 @@ public class World implements Observable<String> {
     }
 
     public List<Tank> getTanks() {
-        return tanks;
+        return new ArrayList<>(){{ add(playerOneTank); add(playerTwoTank); }};
     }
 
     @Override
-    public void addObservers(Observer<String> observer) {
+    public void addObservers(Observer<GameEvent> observer) {
         if (this.observer == null)
             this.observer = observer;
     }
 
     @Override
-    public void notifyObservers(String message) {
+    public void notifyObservers(GameEvent message) {
         observer.onNotify(message);
     }
 
-    public void moveTank(int tankIndex, Direction direction) {
-        Tank tank = tanks.get(tankIndex);
+    public void moveTank(int playerNumber, Direction direction) {
+        Tank tank = null;
+        if (playerNumber == 0) {
+            tank = playerOneTank;
+        } else if (playerNumber == 1) {
+            tank = playerTwoTank;
+        }
+
         if (tank != null) {
             if (direction == Direction.North) {
                 tank.turnNorth();
@@ -191,14 +244,24 @@ public class World implements Observable<String> {
         }
     }
 
-    public void stopTank(int tankIndex) {
-        Tank tank = tanks.get(tankIndex);
+    public void stopTank(int playerNumber) {
+        Tank tank = null;
+        if (playerNumber == 0)  {
+            tank = playerOneTank;
+        } else if (playerNumber == 1) {
+            tank = playerTwoTank;
+        }
         if (tank != null)
             tank.setStop();
     }
 
-    public void fireBullet(int tankIndex) {
-        Tank tank = tanks.get(tankIndex);
+    public void fireBullet(int playerNumber) {
+        Tank tank = null;
+        if (playerNumber == 0) {
+            tank = playerOneTank;
+        } else if (playerNumber == 1) {
+            tank = playerTwoTank;
+        }
         if (tank != null) {
             int tankX = tank.getX();
             int tankY = tank.getY();
