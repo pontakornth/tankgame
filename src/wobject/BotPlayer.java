@@ -21,6 +21,14 @@ public class BotPlayer {
     public void execute() {
         // TODO: implement execute logic here!
         // defense the bullet
+        try {
+            Bullet bullet = getIncomingBullet().get(0);
+            Direction direction = bullet.getDirection();
+            System.out.println(direction.name());
+            System.out.println("Bullet " + bullet.getDirection().name());
+        } catch (Exception e) {
+
+        }
     }
 
     // TODO: implement bot logic here!

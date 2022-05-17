@@ -268,14 +268,14 @@ public class World implements Observable<GameEvent> {
             Direction direction = tank.getDirection();
             Faction faction = tank.getFaction();
             if (direction == Direction.North) {
-                bullet = bulletPool.requestBullet(tankX, tankY, 0, -1, faction);
+                bullet = bulletPool.requestBullet(tankX, tankY, Direction.North, faction);
             } else if (direction == Direction.South) {
-                bullet = bulletPool.requestBullet(tankX, tankY, 0, 1, faction);
+                bullet = bulletPool.requestBullet(tankX, tankY, Direction.South, faction);
             } else if (direction == Direction.East) {
-                bullet = bulletPool.requestBullet(tankX, tankY, 1, 0, faction);
+                bullet = bulletPool.requestBullet(tankX, tankY, Direction.East, faction);
             } else {
                 // West is the only direction left.
-                bullet = bulletPool.requestBullet(tankX, tankY, -1, 0, faction);
+                bullet = bulletPool.requestBullet(tankX, tankY, Direction.West, faction);
             }
             bullets.add(bullet);
         }
