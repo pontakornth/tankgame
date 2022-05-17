@@ -2,6 +2,9 @@ package wobject.bot.strategy;
 
 import wobject.World;
 import wobject.command.GameCommand;
+
+import java.util.Random;
+
 import static wobject.command.CommandFactory.CommandEnum.*;
 import static wobject.command.CommandFactory.getMoveCommand;
 
@@ -13,6 +16,10 @@ public class BraveStrategy extends Strategy {
 
     @Override
     public GameCommand getNextMove() {
-        return getMoveCommand(world, botNumber, MoveStop);
+        if(new Random().nextInt() % 2 == 0) {
+            return new StrategyUtils(world, botNumber).moveToObject(world.getTanks().get(0));
+        } else {
+            return getMoveCommand(world, botNumber, MoveFire);
+        }
     }
 }
