@@ -5,8 +5,11 @@ import java.util.Comparator;
 import java.util.List;
 
 import util.DirUtils;
+import wobject.command.GameCommand;
+import static wobject.command.CommandEnum.*;
 
 import static java.lang.Math.abs;
+import static wobject.command.CommandFactory.getMoveCommand;
 
 public class BotPlayer {
 
@@ -14,16 +17,25 @@ public class BotPlayer {
     private int botNumber;
     private DirUtils dirUtils = new DirUtils();
 
+    private List<GameCommand> commands;
+
     BotPlayer(World world, int botNumber) {
         this.world = world;
         this.botNumber = botNumber;
+        this.commands = new ArrayList<>();
     }
 
     public void execute() {
         // TODO: implement execute logic here!
         // defense the bullet
         defense();
-        randomMove();
+        GameCommand currentCommand;
+        try {
+            currentCommand = commands.remove(0);
+            currentCommand.execute();
+        } catch (Exception e) {
+            defense();
+        }
     }
 
     // TODO: implement bot logic here!
@@ -44,17 +56,32 @@ public class BotPlayer {
         }
         // dodge the bullet
         if(bullet.getX() + 2*bullet.getDx() == botTank.getX() && bullet.getY() + 2*bullet.getDy() == botTank.getY()) {
-            world.moveTank(botNumber, dirUtils.getDirWithout(dirUtils.getOppositeDir(bullet.getDirection())));
+            Direction dir =  dirUtils.getDirWithout(dirUtils.getOppositeDir(bullet.getDirection()));
+            switch (dir) {
+                case North:
+                    commands.add(getMoveCommand(world, botNumber, MoveNorth));
+                    break;
+                case South:
+                    commands.add(getMoveCommand(world, botNumber, MoveSouth));
+                    break;
+                case East:
+                    commands.add(getMoveCommand(world, botNumber, MoveEast));
+                    break;
+                case West:
+                    commands.add(getMoveCommand(world, botNumber, MoveWest));
+                    break;
+            }
+            commands.add(getMoveCommand(world, botNumber, MoveStop));
             return;
         }
-        // destroy the bullet
-        if(bullet.getX() + 3*bullet.getDx() == botTank.getX()
-                && bullet.getY() + 3*bullet.getDy() == botTank.getY()
-                && bullet.getDirection() == dirUtils.getOppositeDir(botTank.getDirection())
-        ) {
-            world.fireBullet(botNumber);
-            return;
-        }
+//        // destroy the bullet
+//        if(bullet.getX() + 3*bullet.getDx() == botTank.getX()
+//                && bullet.getY() + 3*bullet.getDy() == botTank.getY()
+//                && bullet.getDirection() == dirUtils.getOppositeDir(botTank.getDirection())
+//        ) {
+//            world.fireBullet(botNumber);
+//            return;
+//        }
     }
 
     private List<Bullet> getIncomingBullet() {
