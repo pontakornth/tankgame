@@ -18,7 +18,7 @@ public class Window extends JFrame {
     private OptionMenu optionMenu;
     private MapMenu mapMenu;
 
-    Window() {
+    public Window() {
         super();
 
         initMenu();

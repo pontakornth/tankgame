@@ -20,19 +20,19 @@ import config.MovementConfig.KeyProp;
 
 public class BattleField extends JPanel implements Observer<GameEvent> {
 
-    // TODO: add world object and update its graphic
     private World world;
     // Map filename to image to reduce redundant load.
     private Map<String, Image> imageMap;
 
     private int SIZE = 23;
     private int GRID_PIXEL = 30;
+    private int playerNumber;
 
     private BackgroundProcess backgroundProcess;
 
     BattleField(BackgroundProcess backgroundProcess, int playerNumber, List<String> map) {
         this.backgroundProcess = backgroundProcess;
-        // TODO: update this to handle player number
+        this.playerNumber = playerNumber;
         if(map == null) {
             world = new World();
         } else {
@@ -49,17 +49,18 @@ public class BattleField extends JPanel implements Observer<GameEvent> {
 
     @Override
     public void onNotify(GameEvent message) {
-        // TODO: Add notification dialog
-        // TODO: Back to main menu
         if (message == GameEvent.Update) {
             repaint();
         } else if (message == GameEvent.PlayerOneWon) {
-            System.out.println("Player one won!");
+            JOptionPane.showMessageDialog(backgroundProcess.getWindow(), "Player 1 Wins");
+            backgroundProcess.changeToGameMenu();
         } else if (message == GameEvent.PlayerTwoWon) {
-            System.out.println("Player two won!");
+            JOptionPane.showMessageDialog(backgroundProcess.getWindow(), "Player 2 Wins");
+            backgroundProcess.changeToGameMenu();
         }
     }
 
+    // TODO: Handle Bot Key Event or Change Methods
     private class MovementListener extends KeyAdapter {
         private Observer<String> observer;
         private final BattleField battleField;
@@ -71,7 +72,8 @@ public class BattleField extends JPanel implements Observer<GameEvent> {
         public void keyPressed(KeyEvent e) {
             MovementConfig movementConfig = MovementConfig.getInstance();
             int keyCode = e.getKeyCode();
-            // TODO: Handle second tank and stopping.
+
+            // Player One
             if (keyCode == movementConfig.getKeyCode(KeyProp.ONE_UP)) {
                 battleField.moveTank(0, Direction.North);
             } else if (keyCode == movementConfig.getKeyCode(KeyProp.ONE_DOWN)) {
@@ -84,22 +86,24 @@ public class BattleField extends JPanel implements Observer<GameEvent> {
                 battleField.fireBullet(0);
             }
 
-            if (keyCode == movementConfig.getKeyCode(KeyProp.TWO_UP)) {
-                battleField.moveTank(1, Direction.North);
-            } else if (keyCode == movementConfig.getKeyCode(KeyProp.TWO_DOWN)) {
-                battleField.moveTank(1, Direction.South);
-            } else if (keyCode == movementConfig.getKeyCode(KeyProp.TWO_LEFT)) {
-                battleField.moveTank(1, Direction.West);
-            } else if (keyCode == movementConfig.getKeyCode(KeyProp.TWO_RIGHT)) {
-                battleField.moveTank(1, Direction.East);
-            } else if (keyCode == movementConfig.getKeyCode(KeyProp.TWO_FIRE)) {
-                battleField.fireBullet(1);
+            // Player Two or disable for bot
+            if(playerNumber > 1) {
+                if (keyCode == movementConfig.getKeyCode(KeyProp.TWO_UP)) {
+                    battleField.moveTank(1, Direction.North);
+                } else if (keyCode == movementConfig.getKeyCode(KeyProp.TWO_DOWN)) {
+                    battleField.moveTank(1, Direction.South);
+                } else if (keyCode == movementConfig.getKeyCode(KeyProp.TWO_LEFT)) {
+                    battleField.moveTank(1, Direction.West);
+                } else if (keyCode == movementConfig.getKeyCode(KeyProp.TWO_RIGHT)) {
+                    battleField.moveTank(1, Direction.East);
+                } else if (keyCode == movementConfig.getKeyCode(KeyProp.TWO_FIRE)) {
+                    battleField.fireBullet(1);
+                }
             }
         }
 
         @Override
         public void keyReleased(KeyEvent e) {
-            // TODO: Receive array of keys from config instead
             MovementConfig movementConfig = MovementConfig.getInstance();
             int[] player1 = new int[]{
                     movementConfig.getKeyCode(KeyProp.ONE_UP),

@@ -21,11 +21,7 @@ public class World implements Observable<GameEvent> {
     private Observer<GameEvent> observer;
 
     public World() {
-        tiles = new ArrayList<>() {{
-            add(new Brick(0, 0));
-            add(new Steel(1, 0));
-            add(new Trees(2, 0));
-        }};
+        tiles = new ArrayList<>();
         playerOneTank = new Tank(5, 20, 1);
         playerTwoTank = new Tank(5, 5, 1);
         bullets = new ArrayList<>();
@@ -33,7 +29,6 @@ public class World implements Observable<GameEvent> {
     }
 
     public World(List<String> map, int playerNumber) {
-        // TODO: handle one/two players game
         tiles = new ArrayList<>();
         bullets = new ArrayList<>();
         for(int i=0; i<23; i++) {
@@ -44,8 +39,12 @@ public class World implements Observable<GameEvent> {
                         playerOneTank = new Tank(j, i, 1, Faction.Blue);
                         break;
                     case '2':
-                        // TODO: Handle case for singleplayer.
-                        playerTwoTank = new Tank(j, i, 1, Faction.Red);
+                        if (playerNumber == 2) {
+                            playerTwoTank = new Tank(j, i, 1, Faction.Red);
+                        } else {
+                            // TODO: Create Bot Tank, now it's just template
+                            playerTwoTank = new Tank(j, i, 1, Faction.Gray);
+                        }
                         break;
                     case 'B':
                         tiles.add(new Brick(j, i));
@@ -68,7 +67,7 @@ public class World implements Observable<GameEvent> {
             while (true) {
                 List<Bullet> bulletsToRemove = new ArrayList<>();
                 List<WObject> tilesToRemove = new ArrayList<>();
-//                List<Tank> tanksToRemove = new ArrayList<>();
+
                 boolean someoneWon = checkWinCondition();
                 if (someoneWon)
                     break;
@@ -77,14 +76,7 @@ public class World implements Observable<GameEvent> {
                 checkTilesAndBulletsCollision(bulletsToRemove, tilesToRemove);
                 handleBulletsAndBulletsCollision(bulletsToRemove);
                 handleBulletsAndTanksCollision(bulletsToRemove);
-//                for (Tank tank: tanks) {
-//                    if (tank.getLifePoint() == 0) {
-//                        tanksToRemove.add(tank);
-//                    }
-//                }
-//                for (Tank tank: tanksToRemove) {
-//                    tanks.remove(tank);
-//                }
+
                 for (Bullet bulletToRemove: bulletsToRemove) {
                     bulletPool.returnBullet(bulletToRemove);
                     bullets.remove(bulletToRemove);
@@ -171,7 +163,6 @@ public class World implements Observable<GameEvent> {
             if (bullet.isOutsideBorder(23, 23)) {
                 bulletsToRemove.add(bullet);
             }
-            ;
             bullet.update();
         }
     }
