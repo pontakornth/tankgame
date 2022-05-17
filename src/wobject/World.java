@@ -21,8 +21,6 @@ public class World implements Observable<String> {
     private Observer<String> observer;
 
     public World() {
-        // TODO: Load map from files instead.
-        // TODO: Tiles must be located based on index.
         tiles = new ArrayList<>() {{
             add(new Brick(0, 0));
             add(new Steel(1, 0));
