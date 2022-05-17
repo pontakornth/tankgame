@@ -126,16 +126,16 @@ public class BattleField extends JPanel implements Observer<GameEvent> {
         }
     }
 
-    private void fireBullet(int tankIndex) {
-        world.fireBullet(tankIndex);
+    private void fireBullet(int playerNumber) {
+        world.fireBullet(playerNumber);
     }
 
-    private void stopTank(int tankIndex) {
-        world.stopTank(tankIndex);
+    private void stopTank(int playerNumber) {
+        world.stopTank(playerNumber);
     }
 
-    private void moveTank(int tankIndex, Direction direction) {
-        world.moveTank(tankIndex, direction);
+    private void moveTank(int playerNumber, Direction direction) {
+        world.moveTank(playerNumber, direction);
     }
 
     // paint methods
