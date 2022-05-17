@@ -10,6 +10,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
+import static java.lang.Math.PI;
 import static java.lang.Math.min;
 import static util.DistanceCalculator.manhattanDist;
 import static wobject.command.CommandFactory.CommandEnum.*;
@@ -92,6 +93,9 @@ public class CowardStrategy extends Strategy {
 
     private WObject getClosestObject() {
         List<WObject> objects = world.getTiles();
+        if (objects.size() == 0) {
+            return null;
+        }
         objects.sort(new Comparator<WObject>() {
             @Override
             public int compare(WObject o1, WObject o2) {
