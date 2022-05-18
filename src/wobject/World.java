@@ -94,8 +94,8 @@ public class World implements Observable<GameEvent> {
     }
 
     private boolean checkWinCondition() {
-        boolean playerOneWon = playerTwoTank.getLifePoint() == 0;
-        boolean playerTwoWon = playerOneTank.getLifePoint() == 0;
+        boolean playerOneWon = playerTwoTank.getLifePoint() <= 0;
+        boolean playerTwoWon = playerOneTank.getLifePoint() <= 0;
         if (playerOneWon) {
             notifyObservers(GameEvent.PlayerOneWon);
         } else if (playerTwoWon) {
