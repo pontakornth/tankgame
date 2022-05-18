@@ -17,8 +17,9 @@ public class Window extends JFrame {
     private GameMenu gameMenu;
     private OptionMenu optionMenu;
     private MapMenu mapMenu;
+    private BotMenu botMenu;
 
-    Window() {
+    public Window() {
         super();
 
         initMenu();
@@ -51,6 +52,10 @@ public class Window extends JFrame {
         return optionMenu;
     }
 
+    public BotMenu getBotMenu() {
+        return botMenu;
+    }
+
     public MapMenu getMapMenu() {
         return mapMenu;
     }
@@ -61,6 +66,10 @@ public class Window extends JFrame {
 
     public void setMapMenu(MapMenu mapMenu) {
         this.mapMenu = mapMenu;
+    }
+
+    public void setBotMenu(BotMenu botMenu) {
+        this.botMenu = botMenu;
     }
 
     public static void main(String[] args) {

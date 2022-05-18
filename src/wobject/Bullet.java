@@ -6,8 +6,9 @@ public class Bullet extends WObject implements Movable, FactionObject {
     private int dy;
 
     private Faction faction;
+    private Direction direction;
 
-    Bullet(int x, int y) {
+    public Bullet(int x, int y) {
         super(x, y);
     }
 
@@ -76,6 +77,14 @@ public class Bullet extends WObject implements Movable, FactionObject {
 
     public boolean isOutsideBorder(int borderHorizontalSize, int borderVerticalSize) {
         return (x < 0 || x >= borderHorizontalSize || y < 0 || y >= borderVerticalSize);
+    }
+
+    public Direction getDirection() {
+        return direction;
+    }
+
+    public void setDirection(Direction direction) {
+        this.direction = direction;
     }
 
     @Override

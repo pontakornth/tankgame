@@ -3,6 +3,8 @@ package wobject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static wobject.Direction.*;
+
 public class BulletPool {
     private final List<Bullet> bullets;
     private int currentSize;
@@ -23,13 +25,30 @@ public class BulletPool {
         this(10);
     }
 
-    public Bullet requestBullet(int x, int y, int dx, int dy, Faction faction) {
+    public Bullet requestBullet(int x, int y, Direction direction, Faction faction) {
         if (bullets.isEmpty()) {
             bullets.add(new Bullet(0, 0));
             currentSize++;
         }
         Bullet bullet = bullets.remove(0);
-        bullet.refreshState(x, y, dx, dy, faction);
+        switch (direction) {
+            case North:
+                bullet.refreshState(x, y, 0, -1, faction);
+                bullet.setDirection(North);
+                break;
+            case South:
+                bullet.refreshState(x, y, 0, 1, faction);
+                bullet.setDirection(South);
+                break;
+            case East:
+                bullet.refreshState(x, y, 1, 0, faction);
+                bullet.setDirection(East);
+                break;
+            case West:
+                bullet.refreshState(x, y, -1, 0, faction);
+                bullet.setDirection(West);
+                break;
+        }
         return bullet;
     }
 

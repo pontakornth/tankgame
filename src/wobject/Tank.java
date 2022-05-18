@@ -21,7 +21,6 @@ public class Tank extends WObject implements Movable, FactionObject {
         directionImageFileName.put(Direction.South, getFileName(faction, "back"));
         directionImageFileName.put(Direction.East, getFileName(faction, "right"));
         directionImageFileName.put(Direction.West, getFileName(faction, "left"));
-
     }
 
     private static String getFileName(Faction faction, String direction) {

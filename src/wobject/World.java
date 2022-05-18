@@ -2,6 +2,7 @@ package wobject;
 
 import util.Observable;
 import util.Observer;
+import wobject.bot.strategy.StrategyFactory.StrategyEnum;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,26 +15,14 @@ public class World implements Observable<GameEvent> {
 
     private Tank playerOneTank;
     private Tank playerTwoTank;
+    private BotPlayer botPlayer;
 
     // Only bullets on screen are listed here.
     private List<Bullet> bullets;
     private BulletPool bulletPool;
     private Observer<GameEvent> observer;
 
-    public World() {
-        tiles = new ArrayList<>() {{
-            add(new Brick(0, 0));
-            add(new Steel(1, 0));
-            add(new Trees(2, 0));
-        }};
-        playerOneTank = new Tank(5, 20, 1);
-        playerTwoTank = new Tank(5, 5, 1);
-        bullets = new ArrayList<>();
-        bulletPool = new BulletPool();
-    }
-
-    public World(List<String> map, int playerNumber) {
-        // TODO: handle one/two players game
+    public World(List<String> map, int playerNumber, StrategyEnum strategyEnum) {
         tiles = new ArrayList<>();
         bullets = new ArrayList<>();
         for(int i=0; i<23; i++) {
@@ -44,8 +33,12 @@ public class World implements Observable<GameEvent> {
                         playerOneTank = new Tank(j, i, 1, Faction.Blue);
                         break;
                     case '2':
-                        // TODO: Handle case for singleplayer.
-                        playerTwoTank = new Tank(j, i, 1, Faction.Red);
+                        if (playerNumber == 2) {
+                            playerTwoTank = new Tank(j, i, 1, Faction.Red);
+                        } else {
+                            botPlayer = new BotPlayer(this, 1, strategyEnum);
+                            playerTwoTank = new Tank(j, i, 1, Faction.Gray);
+                        }
                         break;
                     case 'B':
                         tiles.add(new Brick(j, i));
@@ -64,11 +57,15 @@ public class World implements Observable<GameEvent> {
 
     public void init() {
         Thread thread = new Thread(() -> {
-            // TODO: Add win condition.
             while (true) {
+
+                if(botPlayer != null) {
+                    botPlayer.execute();
+                }
+
                 List<Bullet> bulletsToRemove = new ArrayList<>();
                 List<WObject> tilesToRemove = new ArrayList<>();
-//                List<Tank> tanksToRemove = new ArrayList<>();
+
                 boolean someoneWon = checkWinCondition();
                 if (someoneWon)
                     break;
@@ -77,14 +74,7 @@ public class World implements Observable<GameEvent> {
                 checkTilesAndBulletsCollision(bulletsToRemove, tilesToRemove);
                 handleBulletsAndBulletsCollision(bulletsToRemove);
                 handleBulletsAndTanksCollision(bulletsToRemove);
-//                for (Tank tank: tanks) {
-//                    if (tank.getLifePoint() == 0) {
-//                        tanksToRemove.add(tank);
-//                    }
-//                }
-//                for (Tank tank: tanksToRemove) {
-//                    tanks.remove(tank);
-//                }
+
                 for (Bullet bulletToRemove: bulletsToRemove) {
                     bulletPool.returnBullet(bulletToRemove);
                     bullets.remove(bulletToRemove);
@@ -92,7 +82,7 @@ public class World implements Observable<GameEvent> {
                 for (WObject tileToRemove: tilesToRemove) {
                     tiles.remove(tileToRemove);
                 }
-                notifyObservers(GameEvent.Update);
+                notifyObservers(GameEvent.Update); // BattleField will repaint this
                 try {
                     Thread.sleep(100 * 3);
                 } catch (Exception e) {
@@ -104,8 +94,8 @@ public class World implements Observable<GameEvent> {
     }
 
     private boolean checkWinCondition() {
-        boolean playerOneWon = playerTwoTank.getLifePoint() == 0;
-        boolean playerTwoWon = playerOneTank.getLifePoint() == 0;
+        boolean playerOneWon = playerTwoTank.getLifePoint() <= 0;
+        boolean playerTwoWon = playerOneTank.getLifePoint() <= 0;
         if (playerOneWon) {
             notifyObservers(GameEvent.PlayerOneWon);
         } else if (playerTwoWon) {
@@ -171,7 +161,6 @@ public class World implements Observable<GameEvent> {
             if (bullet.isOutsideBorder(23, 23)) {
                 bulletsToRemove.add(bullet);
             }
-            ;
             bullet.update();
         }
     }
@@ -262,6 +251,8 @@ public class World implements Observable<GameEvent> {
         } else if (playerNumber == 1) {
             tank = playerTwoTank;
         }
+        // unable to move when firing a bullet
+        stopTank(playerNumber);
         if (tank != null) {
             int tankX = tank.getX();
             int tankY = tank.getY();
@@ -269,14 +260,14 @@ public class World implements Observable<GameEvent> {
             Direction direction = tank.getDirection();
             Faction faction = tank.getFaction();
             if (direction == Direction.North) {
-                bullet = bulletPool.requestBullet(tankX, tankY, 0, -1, faction);
+                bullet = bulletPool.requestBullet(tankX, tankY, Direction.North, faction);
             } else if (direction == Direction.South) {
-                bullet = bulletPool.requestBullet(tankX, tankY, 0, 1, faction);
+                bullet = bulletPool.requestBullet(tankX, tankY, Direction.South, faction);
             } else if (direction == Direction.East) {
-                bullet = bulletPool.requestBullet(tankX, tankY, 1, 0, faction);
+                bullet = bulletPool.requestBullet(tankX, tankY, Direction.East, faction);
             } else {
                 // West is the only direction left.
-                bullet = bulletPool.requestBullet(tankX, tankY, -1, 0, faction);
+                bullet = bulletPool.requestBullet(tankX, tankY, Direction.West, faction);
             }
             bullets.add(bullet);
         }

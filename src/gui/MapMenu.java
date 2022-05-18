@@ -44,7 +44,11 @@ public class MapMenu extends JPanel {
             button.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    backgroundProcess.changeToGame(playerNumber, MapReader.read(stageFile));
+                    if(playerNumber != 2) {
+                        backgroundProcess.changeToBotMenu(MapReader.read(stageFile));
+                    } else {
+                        backgroundProcess.changeToTwoPlayerGame(MapReader.read(stageFile));
+                    }
                 }
             });
             button.setBounds(244, 249+i*70, buttonSize.width, buttonSize.height);
