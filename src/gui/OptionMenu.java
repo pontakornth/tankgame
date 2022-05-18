@@ -41,7 +41,6 @@ public class OptionMenu extends JPanel{
         keyChangeListener = new KeyChangeListener();
         addKeyListener(keyChangeListener);
 
-        // TODO: config dynamic panel size
         setPreferredSize(new Dimension(690, 690));
     }
 

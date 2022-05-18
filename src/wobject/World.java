@@ -9,7 +9,6 @@ import java.util.List;
 
 public class World implements Observable<GameEvent> {
 
-    // TODO: implement game logic here!
     // tiles are for fixed tiles such as bricks, steel, or trees
     private List<WObject> tiles;
 
@@ -107,7 +106,6 @@ public class World implements Observable<GameEvent> {
 
     private void handleBulletsAndTanksCollision(List<Bullet> bulletsToRemove) {
         for (Bullet bullet: bullets) {
-            // TODO: Remove duplicate(?)
             if (bullet.hit(playerOneTank) && !bullet.sameFaction(playerOneTank)) {
                 // Bullet hit different
                 playerOneTank.damage();
@@ -157,7 +155,6 @@ public class World implements Observable<GameEvent> {
 
     private void removeOffScreenBullets(List<Bullet> bulletsToRemove) {
         for (Bullet bullet : bullets) {
-            // TODO: Check collision against brick and tanks
             if (bullet.isOutsideBorder(23, 23)) {
                 bulletsToRemove.add(bullet);
             }

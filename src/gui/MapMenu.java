@@ -31,7 +31,6 @@ public class MapMenu extends JPanel {
         }
         add(backButton);
 
-        // TODO: config dynamic panel size
         setPreferredSize(new Dimension(690, 690));
     }
 

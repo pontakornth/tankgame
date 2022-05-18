@@ -22,7 +22,6 @@ public class GameMenu extends JPanel {
         add(twoPlayerButton);
         add(optionButton);
 
-        // TODO: config dynamic panel size
         setPreferredSize(new Dimension(690, 690));
     }
 
